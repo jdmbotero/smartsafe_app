@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "387960015836",
+    "project_id": "smart-safe-bf2c9",
+    "storage_bucket": "smart-safe-bf2c9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:387960015836:android:695bb1770b6cee65591d19",
+        "android_client_info": {
+          "package_name": "com.smartsafe.smartsafe_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "387960015836-4m0cm3nh67tn205bill1mu5kngf0qvja.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA9RwVl8u8_FAYm_8Zr7AuK5FynI-yCK1M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "387960015836-4m0cm3nh67tn205bill1mu5kngf0qvja.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
