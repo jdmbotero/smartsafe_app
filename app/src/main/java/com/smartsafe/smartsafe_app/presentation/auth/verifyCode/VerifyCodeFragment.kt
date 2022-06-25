@@ -1,4 +1,4 @@
-package com.smartsafe.smartsafe_app.presentation.auth.phoneNumber
+package com.smartsafe.smartsafe_app.presentation.auth.verifyCode
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,16 +7,16 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import com.smartsafe.smartsafe_app.databinding.FragmentPhoneNumberBinding
+import com.smartsafe.smartsafe_app.databinding.FragmentVerifyCodeBinding
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class PhoneNumberFragment : Fragment() {
+class VerifyCodeFragment : Fragment() {
 
-    lateinit var binding: FragmentPhoneNumberBinding
-    private val phoneNumberViewModel: PhoneNumberViewModel by activityViewModels()
+    lateinit var binding: FragmentVerifyCodeBinding
+    private val verifyCodeViewModel: VerifyCodeViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,18 +28,18 @@ class PhoneNumberFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentPhoneNumberBinding.inflate(inflater, container, false)
+        binding = FragmentVerifyCodeBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     private fun observeViewModel() {
         lifecycleScope.launch {
-            phoneNumberViewModel.state.collect { state ->
+            verifyCodeViewModel.state.collect { state ->
                 when (state) {
-                    is PhoneNumberState.Loading -> showLoading()
-                    is PhoneNumberState.Success -> TODO()
-                    is PhoneNumberState.Error -> showError(state.message)
-                    is PhoneNumberState.Idle -> TODO()
+                    is VerifyCodeState.Loading -> showLoading()
+                    is VerifyCodeState.Success -> TODO()
+                    is VerifyCodeState.Error -> showError(state.message)
+                    is VerifyCodeState.Idle -> TODO()
                 }
             }
         }
@@ -55,7 +55,7 @@ class PhoneNumberFragment : Fragment() {
 
     private fun verifyPhoneNumber() {
         lifecycleScope.launch {
-            phoneNumberViewModel.userIntent.send(PhoneNumberIntent.VerifyPhoneNumber(""))
+            verifyCodeViewModel.userIntent.send(VerifyCodeIntent.VerifyCodeNumber("", ""))
         }
     }
 }

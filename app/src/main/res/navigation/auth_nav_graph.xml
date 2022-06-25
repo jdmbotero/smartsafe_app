@@ -9,5 +9,14 @@
         android:id="@+id/phoneNumberFragment"
         android:name="com.smartsafe.smartsafe_app.presentation.auth.phoneNumber.PhoneNumberFragment"
         android:label="fragment_phone_number"
-        tools:layout="@layout/fragment_phone_number" />
+        tools:layout="@layout/fragment_phone_number" >
+        <action
+            android:id="@+id/action_phoneNumberFragment_to_verifyCodeFragment"
+            app:destination="@id/verifyCodeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/verifyCodeFragment"
+        android:name="com.smartsafe.smartsafe_app.presentation.auth.verifyCode.VerifyCodeFragment"
+        android:label="fragment_verify_code"
+        tools:layout="@layout/fragment_verify_code" />
 </navigation>

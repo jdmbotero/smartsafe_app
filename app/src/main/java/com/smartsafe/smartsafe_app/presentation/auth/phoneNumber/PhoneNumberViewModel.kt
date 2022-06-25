@@ -19,10 +19,10 @@ class PhoneNumberViewModel @Inject constructor(
 ) : ViewModel() {
 
     val userIntent = Channel<PhoneNumberIntent>(Channel.UNLIMITED)
-    private val _phoneNumberState = MutableStateFlow<PhoneNumberState>(PhoneNumberState.Idle)
+    private val _state = MutableStateFlow<PhoneNumberState>(PhoneNumberState.Idle)
 
-    val phoneNumberState: StateFlow<PhoneNumberState>
-        get() = _phoneNumberState
+    val state: StateFlow<PhoneNumberState>
+        get() = _state
 
     init {
         handleIntent()
@@ -39,10 +39,10 @@ class PhoneNumberViewModel @Inject constructor(
     }
 
     private suspend fun verifyPhoneNumber(phoneNumber: String) {
-        _phoneNumberState.value = PhoneNumberState.Loading
+        _state.value = PhoneNumberState.Loading
         verifyPhoneNumberUseCase.launch(phoneNumber)
         verifyPhoneNumberUseCase.resultFlow.collect {
-            _phoneNumberState.value = when (it) {
+            _state.value = when (it) {
                 is VerifyPhoneNumberState.VerificationCompleted -> TODO()
                 is VerifyPhoneNumberState.VerificationFailed -> PhoneNumberState.Error(it.message)
                 is VerifyPhoneNumberState.CodeSent -> PhoneNumberState.Success(it.verificationId)
