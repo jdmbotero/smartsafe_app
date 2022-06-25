@@ -16,14 +16,26 @@ abstract class FlowUseCase<Response, Request> {
     /**
      * Exposes result of this use case
      */
-    val resultFlow: Flow<Response> = _trigger.flatMapLatest { trigger -> performAction(trigger) }
+    val resultFlow: Flow<Response> = _trigger.flatMapLatest { trigger ->
+        trigger?.let { performAction(trigger) } ?: performAction()
+    }
 
     /**
      * Triggers the execution of this use case
      */
-    suspend fun launch(request: Request? = null) {
+    suspend fun launch(request: Request) {
         _trigger.emit(request)
     }
 
-    protected abstract suspend fun performAction(request: Request? = null): Flow<Response>
+    suspend fun launch() {
+        _trigger.emit(null)
+    }
+
+    open suspend fun performAction(request: Request): Flow<Response> {
+        TODO("This method is not implemented")
+    }
+
+    open suspend fun performAction(): Flow<Response> {
+        TODO("This method is not implemented")
+    }
 }

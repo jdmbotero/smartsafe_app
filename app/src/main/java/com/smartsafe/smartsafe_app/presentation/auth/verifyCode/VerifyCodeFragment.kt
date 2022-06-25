@@ -17,10 +17,14 @@ class VerifyCodeFragment : Fragment() {
 
     lateinit var binding: FragmentVerifyCodeBinding
     private val verifyCodeViewModel: VerifyCodeViewModel by activityViewModels()
+    lateinit var verificationId: String
+
+    companion object {
+        const val VERIFICATION_ID_PARAM = "verificationId"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         observeViewModel()
     }
 
@@ -30,6 +34,14 @@ class VerifyCodeFragment : Fragment() {
     ): View {
         binding = FragmentVerifyCodeBinding.inflate(inflater, container, false)
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        arguments?.let {
+            verificationId = it.getString(VERIFICATION_ID_PARAM, "")
+        }
     }
 
     private fun observeViewModel() {
@@ -55,7 +67,12 @@ class VerifyCodeFragment : Fragment() {
 
     private fun verifyPhoneNumber() {
         lifecycleScope.launch {
-            verifyCodeViewModel.userIntent.send(VerifyCodeIntent.VerifyCodeNumber("", ""))
+            verifyCodeViewModel.userIntent.send(
+                VerifyCodeIntent.VerifyCodeNumber(
+                    verificationId,
+                    ""
+                )
+            )
         }
     }
 }
