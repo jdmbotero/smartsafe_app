@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -19,7 +20,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class PhoneNumberFragment : Fragment() {
 
-    lateinit var binding: FragmentPhoneNumberBinding
+    private lateinit var binding: FragmentPhoneNumberBinding
     private val phoneNumberViewModel: PhoneNumberViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,8 +42,12 @@ class PhoneNumberFragment : Fragment() {
     }
 
     private fun setUpView() {
+        binding.phoneNumberText.editText?.doOnTextChanged { inputText, _, _, _ ->
+            binding.phoneNumberButtonSend.isEnabled = (inputText?.length ?: 0) > 0
+        }
+
         binding.phoneNumberButtonSend.setOnClickListener {
-            verifyPhoneNumber("")
+            verifyPhoneNumber(binding.phoneNumberText.editText?.text.toString())
         }
     }
 
@@ -53,18 +58,18 @@ class PhoneNumberFragment : Fragment() {
                     is PhoneNumberState.Loading -> showLoading()
                     is PhoneNumberState.Success -> goToVerifyCode(state.verificationId)
                     is PhoneNumberState.Error -> showError(state.message)
-                    is PhoneNumberState.Idle -> TODO()
+                    is PhoneNumberState.Idle -> {}
                 }
             }
         }
     }
 
     private fun showLoading() {
-        // TODO
+        binding.phoneNumberLoading.show()
     }
 
     private fun showError(message: String?) {
-        // TODO
+        binding.phoneNumberLoading.hide()
     }
 
     private fun verifyPhoneNumber(phoneNumber: String) {
@@ -74,6 +79,7 @@ class PhoneNumberFragment : Fragment() {
     }
 
     private fun goToVerifyCode(verificationId: String) {
+        binding.phoneNumberLoading.hide()
         findNavController().navigate(
             R.id.action_phoneNumberFragment_to_verifyCodeFragment,
             bundleOf(VERIFICATION_ID_PARAM to verificationId)

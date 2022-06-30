@@ -6,18 +6,35 @@
     android:layout_height="match_parent"
     tools:context=".presentation.auth.phoneNumber.PhoneNumberFragment">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/phoneNumberText"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Phone Number"
+        android:layout_margin="20dp"
+        android:background="@null"
+        android:hint="@string/phone_number"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:prefixText="@string/phone_number_prefix">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/phoneNumberButtonSend"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Ingresar"
+        android:text="@string/phone_number_intro"
         app:layout_constraintBottom_toBottomOf="parent" />
+
+    <com.smartsafe.smartsafe_app.presentation.loading.LoadingViewComponent
+        android:id="@+id/phoneNumberLoading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,5 +1,7 @@
 <resources>
-    <string name="app_name">smartsafe_app</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="app_name">Smart Safe</string>
+
+    <string name="phone_number_prefix">+57</string>
+    <string name="phone_number">Número de telefono</string>
+    <string name="phone_number_intro">Entrar</string>
 </resources>
