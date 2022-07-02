@@ -8,7 +8,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -32,18 +31,21 @@ class PhoneNumberViewModel @Inject constructor(
         viewModelScope.launch {
             userIntent.consumeAsFlow().collect {
                 when (it) {
-                    is PhoneNumberIntent.VerifyPhoneNumber -> verifyPhoneNumber(it.phoneNumber)
+                    is PhoneNumberIntent.VerifyPhoneNumber -> verifyPhoneNumber(
+                        it.prefix,
+                        it.phoneNumber
+                    )
                 }
             }
         }
     }
 
-    private suspend fun verifyPhoneNumber(phoneNumber: String) {
+    private suspend fun verifyPhoneNumber(prefix: String, phoneNumber: String) {
         _state.value = PhoneNumberState.Loading
-        verifyPhoneNumberUseCase.launch(phoneNumber)
+        verifyPhoneNumberUseCase.launch(Pair(prefix, phoneNumber))
         verifyPhoneNumberUseCase.resultFlow.collect {
             _state.value = when (it) {
-                is VerifyPhoneNumberState.VerificationCompleted -> TODO()
+                is VerifyPhoneNumberState.VerificationCompleted -> PhoneNumberState.SuccessVerification
                 is VerifyPhoneNumberState.VerificationFailed -> PhoneNumberState.Error(it.message)
                 is VerifyPhoneNumberState.CodeSent -> PhoneNumberState.Success(it.verificationId)
             }

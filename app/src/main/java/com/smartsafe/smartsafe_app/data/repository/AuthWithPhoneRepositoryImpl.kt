@@ -3,28 +3,31 @@ package com.smartsafe.smartsafe_app.data.repository
 import android.app.Application
 import android.util.Log
 import com.google.firebase.FirebaseException
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.PhoneAuthCredential
-import com.google.firebase.auth.PhoneAuthOptions
-import com.google.firebase.auth.PhoneAuthProvider
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import com.google.firebase.auth.*
+import com.smartsafe.smartsafe_app.SmartSafeApplication
+import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-@OptIn(ExperimentalCoroutinesApi::class)
+
 class AuthWithPhoneRepositoryImpl @Inject constructor(
     private val application: Application
 ) : AuthWithPhoneRepository {
 
-    private val auth = FirebaseAuth.getInstance()
-
-    companion object {
-        const val LOG_TAG = "LoginService"
+    private val firebaseAuth: FirebaseAuth by lazy {
+        FirebaseAuth.getInstance()
     }
 
-    override suspend fun verifyPhoneNumber(phoneNumber: String): Flow<VerifyPhoneNumberState> =
+    companion object {
+        const val LOG_TAG = "AuthWithPhoneRepository"
+    }
+
+    override suspend fun verifyPhoneNumber(
+        prefix: String,
+        phoneNumber: String
+    ): Flow<VerifyPhoneNumberState> =
         callbackFlow {
             val verifyPhoneNumberCallbacks =
                 object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
@@ -48,13 +51,16 @@ class AuthWithPhoneRepositoryImpl @Inject constructor(
                     }
                 }
 
-            val options = PhoneAuthOptions.newBuilder(auth)
-                .setPhoneNumber(phoneNumber)
-                .setTimeout(60L, TimeUnit.SECONDS)
-                //.setActivity(this) // Activity (for callback binding)
-                .setCallbacks(verifyPhoneNumberCallbacks)
-                .build()
-            PhoneAuthProvider.verifyPhoneNumber(options)
+            (application as SmartSafeApplication).currentActivity()?.let {
+                val options = PhoneAuthOptions.newBuilder(firebaseAuth)
+                    .setPhoneNumber(prefix + phoneNumber)
+                    .setTimeout(60L, TimeUnit.SECONDS)
+                    .setActivity(it)
+                    .setCallbacks(verifyPhoneNumberCallbacks)
+                    .build()
+                PhoneAuthProvider.verifyPhoneNumber(options)
+            }
+            awaitClose()
         }
 
     override suspend fun verifyCode(
@@ -65,7 +71,7 @@ class AuthWithPhoneRepositoryImpl @Inject constructor(
 
     private fun signInWithPhoneAuthCredential(credential: PhoneAuthCredential) =
         callbackFlow {
-            auth.signInWithCredential(credential)
+            firebaseAuth.signInWithCredential(credential)
                 .addOnCompleteListener(application.mainExecutor) { task ->
                     if (task.isSuccessful) {
                         Log.d(LOG_TAG, "signInWithCredential: success")
@@ -73,9 +79,10 @@ class AuthWithPhoneRepositoryImpl @Inject constructor(
                     } else {
                         Log.w(LOG_TAG, "signInWithCredential: failure", task.exception)
                         trySend(SignInWithPhoneState.Failure(task.exception?.message))
-                        /*if (task.exception is FirebaseAuthInvalidCredentialsException) {
-                        }*/
                     }
                 }
+            awaitClose()
         }
+
+    override fun getCurrentUser(): FirebaseUser? = firebaseAuth.currentUser
 }

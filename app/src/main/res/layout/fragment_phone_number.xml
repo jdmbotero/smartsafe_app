@@ -21,7 +21,8 @@
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:inputType="phone" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -29,12 +30,19 @@
         android:id="@+id/phoneNumberButtonSend"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:stateListAnimator="@null"
         android:text="@string/phone_number_intro"
         app:layout_constraintBottom_toBottomOf="parent" />
 
-    <com.smartsafe.smartsafe_app.presentation.loading.LoadingViewComponent
-        android:id="@+id/phoneNumberLoading"
+    <com.smartsafe.smartsafe_app.presentation.components.loading.LoadingViewComponent
+        android:id="@+id/loading"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="gone" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

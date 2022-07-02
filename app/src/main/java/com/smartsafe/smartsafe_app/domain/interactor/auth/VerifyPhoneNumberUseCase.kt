@@ -7,6 +7,7 @@ import javax.inject.Inject
 
 class VerifyPhoneNumberUseCase @Inject constructor(
     private val repository: AuthWithPhoneRepository
-) : FlowUseCase<VerifyPhoneNumberState, String>() {
-    override suspend fun performAction(request: String) = repository.verifyPhoneNumber(request)
+) : FlowUseCase<VerifyPhoneNumberState, Pair<String, String>>() {
+    override suspend fun performAction(request: Pair<String, String>) =
+        repository.verifyPhoneNumber(request.first, request.second)
 }

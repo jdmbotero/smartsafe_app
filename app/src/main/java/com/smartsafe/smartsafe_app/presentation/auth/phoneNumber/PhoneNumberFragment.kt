@@ -1,5 +1,6 @@
 package com.smartsafe.smartsafe_app.presentation.auth.phoneNumber
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,9 +13,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.smartsafe.smartsafe_app.R
 import com.smartsafe.smartsafe_app.databinding.FragmentPhoneNumberBinding
+import com.smartsafe.smartsafe_app.presentation.auth.AuthActivity
 import com.smartsafe.smartsafe_app.presentation.auth.verifyCode.VerifyCodeFragment.Companion.VERIFICATION_ID_PARAM
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -47,7 +48,10 @@ class PhoneNumberFragment : Fragment() {
         }
 
         binding.phoneNumberButtonSend.setOnClickListener {
-            verifyPhoneNumber(binding.phoneNumberText.editText?.text.toString())
+            verifyPhoneNumber(
+                binding.phoneNumberText.prefixText.toString(),
+                binding.phoneNumberText.editText?.text.toString()
+            )
         }
     }
 
@@ -57,6 +61,7 @@ class PhoneNumberFragment : Fragment() {
                 when (state) {
                     is PhoneNumberState.Loading -> showLoading()
                     is PhoneNumberState.Success -> goToVerifyCode(state.verificationId)
+                    is PhoneNumberState.SuccessVerification -> gotToMain()
                     is PhoneNumberState.Error -> showError(state.message)
                     is PhoneNumberState.Idle -> {}
                 }
@@ -65,24 +70,34 @@ class PhoneNumberFragment : Fragment() {
     }
 
     private fun showLoading() {
-        binding.phoneNumberLoading.show()
+        binding.loading.show()
     }
 
     private fun showError(message: String?) {
-        binding.phoneNumberLoading.hide()
+        binding.loading.hide()
     }
 
-    private fun verifyPhoneNumber(phoneNumber: String) {
+    private fun verifyPhoneNumber(prefix: String, phoneNumber: String) {
         lifecycleScope.launch {
-            phoneNumberViewModel.userIntent.send(PhoneNumberIntent.VerifyPhoneNumber(phoneNumber))
+            phoneNumberViewModel.userIntent.send(
+                PhoneNumberIntent.VerifyPhoneNumber(
+                    prefix,
+                    phoneNumber
+                )
+            )
         }
     }
 
     private fun goToVerifyCode(verificationId: String) {
-        binding.phoneNumberLoading.hide()
+        binding.loading.hide()
         findNavController().navigate(
             R.id.action_phoneNumberFragment_to_verifyCodeFragment,
             bundleOf(VERIFICATION_ID_PARAM to verificationId)
         )
+    }
+
+    private fun gotToMain() {
+        startActivity(Intent(activity, AuthActivity::class.java))
+        activity?.finish()
     }
 }

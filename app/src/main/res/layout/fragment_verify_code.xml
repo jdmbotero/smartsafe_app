@@ -6,11 +6,35 @@
     android:layout_height="match_parent"
     tools:context=".presentation.auth.verifyCode.VerifyCodeFragment">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <com.wynsbin.vciv.VerificationCodeInputView
+        android:id="@+id/verifyCodeText"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Verify Code"
+        android:layout_margin="20dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:vciv_et_background="@android:color/white"
+        app:vciv_et_height="58dp"
+        app:vciv_et_inputType="number"
+        app:vciv_et_number="6"
+        app:vciv_et_text_color="@android:color/black"
+        app:vciv_et_text_size="22sp"
+        app:vciv_et_underline_height="2dp"
+        app:vciv_et_underline_show="true"
+        app:vciv_et_width="58dp" />
+
+    <com.smartsafe.smartsafe_app.presentation.components.loading.LoadingViewComponent
+        android:id="@+id/loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="gone" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.smartsafe.smartsafe_app">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:name=".SmartSafeApplication"
@@ -27,6 +27,9 @@
         </activity>
         <activity
             android:name=".presentation.auth.AuthActivity"
+            android:exported="false" />
+        <activity
+            android:name=".presentation.main.MainActivity"
             android:exported="false" />
     </application>
 
