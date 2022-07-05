@@ -4,4 +4,6 @@
     <string name="phone_number_prefix">+57</string>
     <string name="phone_number">Número de telefono</string>
     <string name="phone_number_intro">Entrar</string>
+    <string name="text_cancel">Cancelar</string>
+    <string name="code_verification">Código de verificación</string>
 </resources>
