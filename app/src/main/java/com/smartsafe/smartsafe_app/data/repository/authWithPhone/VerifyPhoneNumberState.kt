@@ -1,4 +1,4 @@
-package com.smartsafe.smartsafe_app.data.repository
+package com.smartsafe.smartsafe_app.data.repository.authWithPhone
 
 import com.google.firebase.auth.PhoneAuthProvider
 

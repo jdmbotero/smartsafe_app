@@ -1,7 +1,7 @@
 package com.smartsafe.smartsafe_app.domain.interactor.auth
 
-import com.smartsafe.smartsafe_app.data.repository.AuthWithPhoneRepository
-import com.smartsafe.smartsafe_app.data.repository.VerifyPhoneNumberState
+import com.smartsafe.smartsafe_app.data.repository.authWithPhone.AuthWithPhoneRepository
+import com.smartsafe.smartsafe_app.data.repository.authWithPhone.VerifyPhoneNumberState
 import com.smartsafe.smartsafe_app.domain.interactor.FlowUseCase
 import javax.inject.Inject
 

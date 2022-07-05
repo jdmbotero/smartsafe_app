@@ -2,20 +2,22 @@ package com.smartsafe.smartsafe_app.presentation.auth.verifyCode
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.smartsafe.smartsafe_app.data.repository.SignInWithPhoneState
+import com.smartsafe.smartsafe_app.data.repository.authWithPhone.SignInWithPhoneState
+import com.smartsafe.smartsafe_app.domain.interactor.GenericResponseState
 import com.smartsafe.smartsafe_app.domain.interactor.auth.VerifyCodeUseCase
+import com.smartsafe.smartsafe_app.domain.interactor.user.AddOrUpdateUserUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class VerifyCodeViewModel @Inject constructor(
-    private val verifyCodeUseCase: VerifyCodeUseCase
+    private val verifyCodeUseCase: VerifyCodeUseCase,
+    private val addOrUpdateUserUseCase: AddOrUpdateUserUseCase
 ) : ViewModel() {
 
     val userIntent = Channel<VerifyCodeIntent>(Channel.UNLIMITED)
@@ -41,10 +43,25 @@ class VerifyCodeViewModel @Inject constructor(
     private suspend fun verifyCode(verificationId: String, code: String) {
         _state.value = VerifyCodeState.Loading
         verifyCodeUseCase.launch(Pair(verificationId, code))
-        verifyCodeUseCase.resultFlow.collect {
-            _state.value = when (it) {
-                is SignInWithPhoneState.Success -> VerifyCodeState.Success(it.user)
-                is SignInWithPhoneState.Failure -> VerifyCodeState.Error(it.message)
+        verifyCodeUseCase.resultFlow.collect { signInWithPhoneState ->
+            when (signInWithPhoneState) {
+                is SignInWithPhoneState.Success -> {
+                    signInWithPhoneState.user?.let {
+                        addOrUpdateUserUseCase.launch(it.uid)
+                        addOrUpdateUserUseCase.resultFlow.collect { userResponse ->
+                            _state.value = when (userResponse) {
+                                is GenericResponseState.Success<*> -> VerifyCodeState.Success(
+                                    signInWithPhoneState.user
+                                )
+                                is GenericResponseState.Failure -> VerifyCodeState.Error(
+                                    userResponse.message
+                                )
+                            }
+                        }
+                    }
+                }
+                is SignInWithPhoneState.Failure -> _state.value =
+                    VerifyCodeState.Error(signInWithPhoneState.message)
             }
         }
     }

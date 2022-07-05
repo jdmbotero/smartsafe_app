@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class VerifyCodeFragment : Fragment() {
 
-    lateinit var binding: FragmentVerifyCodeBinding
+    private lateinit var binding: FragmentVerifyCodeBinding
     private val verifyCodeViewModel: VerifyCodeViewModel by activityViewModels()
     lateinit var verificationId: String
 
