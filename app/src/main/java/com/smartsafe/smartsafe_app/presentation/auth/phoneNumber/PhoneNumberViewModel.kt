@@ -2,7 +2,7 @@ package com.smartsafe.smartsafe_app.presentation.auth.phoneNumber
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.smartsafe.smartsafe_app.data.repository.VerifyPhoneNumberState
+import com.smartsafe.smartsafe_app.data.repository.authWithPhone.VerifyPhoneNumberState
 import com.smartsafe.smartsafe_app.domain.interactor.auth.VerifyPhoneNumberUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel

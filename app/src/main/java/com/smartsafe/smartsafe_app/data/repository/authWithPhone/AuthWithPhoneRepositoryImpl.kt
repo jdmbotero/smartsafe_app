@@ -1,4 +1,4 @@
-package com.smartsafe.smartsafe_app.data.repository
+package com.smartsafe.smartsafe_app.data.repository.authWithPhone
 
 import android.app.Application
 import android.util.Log
@@ -22,6 +22,8 @@ class AuthWithPhoneRepositoryImpl @Inject constructor(
 
     companion object {
         const val LOG_TAG = "AuthWithPhoneRepository"
+        val isUserLogged = FirebaseAuth.getInstance().currentUser != null
+        val currentUser = FirebaseAuth.getInstance().currentUser
     }
 
     override suspend fun verifyPhoneNumber(

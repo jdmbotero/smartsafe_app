@@ -64,6 +64,7 @@ dependencies {
     // Firebase
     implementation platform("com.google.firebase:firebase-bom:$firebase_bom_version")
     implementation 'com.google.firebase:firebase-auth'
+    implementation 'com.google.firebase:firebase-firestore-ktx'
 
     // Veracode
     implementation 'com.github.Wynsbin:VerificationCodeInputView:1.0.2'
