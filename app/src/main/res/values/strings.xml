@@ -12,6 +12,7 @@
     <string name="register_box">Registrar caja</string>
     <string name="note_scan_qr">Haz click en botón para escanear el código QR que se encuentra en el interior de la caja</string>
     <string name="scan_box">Escanerar caja</string>
+    <string name="id_box">Id de la caja</string>
     <string name="name_box">Nombre de la caja</string>
     <string name="open_box">Abrir caja</string>
     <string name="close_box">Cerrar caja</string>

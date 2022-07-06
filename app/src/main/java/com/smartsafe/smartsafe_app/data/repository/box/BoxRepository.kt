@@ -5,7 +5,7 @@ import com.smartsafe.smartsafe_app.domain.interactor.GenericResponseState
 import kotlinx.coroutines.flow.Flow
 
 interface BoxRepository {
-    suspend fun addOrUpdateBox(userId: String, boxId: String, box: Box): Flow<GenericResponseState>
+    suspend fun addOrUpdateBox(box: Box): Flow<AddOrUpdateBoxState>
 
     suspend fun fetchBoxes(userId: String): Flow<FetchBoxesState>
 }

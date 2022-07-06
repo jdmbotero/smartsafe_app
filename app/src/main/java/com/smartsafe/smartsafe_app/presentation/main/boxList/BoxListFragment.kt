@@ -7,7 +7,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.smartsafe.smartsafe_app.R
 import com.smartsafe.smartsafe_app.databinding.FragmentBoxListBinding
 import com.smartsafe.smartsafe_app.domain.entity.Box
 import dagger.hilt.android.AndroidEntryPoint
@@ -39,6 +41,7 @@ class BoxListFragment : Fragment() {
     }
 
     private fun setUpView() {
+        binding.containedButton.setOnClickListener { goToBoxNew() }
     }
 
     private fun observeViewModel() {
@@ -70,12 +73,23 @@ class BoxListFragment : Fragment() {
 
     private fun setUpBoxesList(boxes: List<Box>) {
         binding.loading.hide()
-        binding.boxList.apply {
-            layoutManager = LinearLayoutManager(context)
-            adapter = BoxListAdapter(boxes) {
-                goToBoxDetail(it)
+        if (boxes.isNotEmpty()) {
+            binding.contentEmptyState.visibility = View.GONE
+            binding.boxList.visibility = View.VISIBLE
+            binding.boxList.apply {
+                layoutManager = LinearLayoutManager(context)
+                adapter = BoxListAdapter(boxes) {
+                    goToBoxDetail(it)
+                }
             }
+        } else {
+            binding.contentEmptyState.visibility = View.VISIBLE
+            binding.boxList.visibility = View.GONE
         }
+    }
+
+    private fun goToBoxNew() {
+        findNavController().navigate(R.id.action_boxListFragment_to_boxNewFragment)
     }
 
     private fun goToBoxDetail(box: Box) {

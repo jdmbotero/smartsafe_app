@@ -43,6 +43,8 @@ class PhoneNumberFragment : Fragment() {
     }
 
     private fun setUpView() {
+        binding.phoneNumberButtonSend.isEnabled = false
+
         binding.phoneNumberText.editText?.doOnTextChanged { inputText, _, _, _ ->
             binding.phoneNumberButtonSend.isEnabled = (inputText?.length ?: 0) > 0
         }

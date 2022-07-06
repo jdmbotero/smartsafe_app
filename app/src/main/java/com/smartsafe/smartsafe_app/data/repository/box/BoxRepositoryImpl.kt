@@ -5,7 +5,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.smartsafe.smartsafe_app.domain.entity.Box
-import com.smartsafe.smartsafe_app.domain.interactor.GenericResponseState
 import com.smartsafe.smartsafe_app.util.Constants.FIRESTORE_BOX_COLLECTION
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
@@ -22,28 +21,26 @@ class BoxRepositoryImpl @Inject constructor() : BoxRepository {
         const val LOG_TAG = "UserRepository"
     }
 
-    override suspend fun addOrUpdateBox(
-        userId: String,
-        boxId: String,
-        box: Box
-    ): Flow<GenericResponseState> =
+    override suspend fun addOrUpdateBox(box: Box): Flow<AddOrUpdateBoxState> =
         callbackFlow {
-            firestoreDb.collection(FIRESTORE_BOX_COLLECTION).document(boxId)
+            firestoreDb.collection(FIRESTORE_BOX_COLLECTION).document(box.id!!)
                 .set(box)
                 .addOnSuccessListener {
                     Log.d(LOG_TAG, "DocumentSnapshot successfully written!")
-                    trySend(GenericResponseState.Success<Box>())
+                    trySend(AddOrUpdateBoxState.Success(box))
                 }
                 .addOnFailureListener { e ->
                     Log.w(LOG_TAG, "Error writing document", e)
-                    trySend(GenericResponseState.Failure(e.message))
+                    trySend(AddOrUpdateBoxState.Failure(e.message))
                 }
             awaitClose()
         }
 
     override suspend fun fetchBoxes(userId: String): Flow<FetchBoxesState> =
         callbackFlow {
-            firestoreDb.collection(FIRESTORE_BOX_COLLECTION).get()
+            firestoreDb.collection(FIRESTORE_BOX_COLLECTION)
+                .whereEqualTo("userId", userId)
+                .get()
                 .addOnSuccessListener {
                     Log.d(LOG_TAG, "DocumentSnapshot successfully written!")
                     trySend(FetchBoxesState.Success(it.toObjects(Box::class.java)))
