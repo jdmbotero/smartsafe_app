@@ -28,7 +28,7 @@ class BoxListViewModel @Inject constructor(
         handleIntent()
     }
 
-    private fun handleIntent() {
+    fun handleIntent() {
         viewModelScope.launch {
             userIntent.consumeAsFlow().collect {
                 when (it) {

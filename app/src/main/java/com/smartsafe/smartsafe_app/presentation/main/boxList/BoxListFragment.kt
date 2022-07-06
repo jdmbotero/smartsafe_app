@@ -21,11 +21,6 @@ class BoxListFragment : Fragment() {
     private lateinit var binding: FragmentBoxListBinding
     private val boxListViewModel: BoxListViewModel by activityViewModels()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        observeViewModel()
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -36,6 +31,7 @@ class BoxListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        observeViewModel()
         setUpView()
         fetchBoxes()
     }
@@ -46,6 +42,7 @@ class BoxListFragment : Fragment() {
 
     private fun observeViewModel() {
         lifecycleScope.launch {
+            boxListViewModel.handleIntent()
             boxListViewModel.state.collect { state ->
                 when (state) {
                     is BoxListState.Loading -> showLoading()
