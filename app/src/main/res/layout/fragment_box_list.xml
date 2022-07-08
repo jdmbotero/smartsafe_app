@@ -83,12 +83,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
-        android:background="@color/pink"
-        android:backgroundTint="@color/pink"
-        android:src="@android:drawable/ic_input_add"
+        app:backgroundTint="@color/pink_light"
+        app:fabSize="auto"
+        android:src="@mipmap/ic_plus"
         android:text="@string/register_box"
-        android:tint="@color/white"
-        android:tintMode="multiply"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

@@ -15,6 +15,7 @@ import com.smartsafe.smartsafe_app.R
 import com.smartsafe.smartsafe_app.databinding.FragmentPhoneNumberBinding
 import com.smartsafe.smartsafe_app.presentation.auth.AuthActivity
 import com.smartsafe.smartsafe_app.presentation.auth.verifyCode.VerifyCodeFragment.Companion.VERIFICATION_ID_PARAM
+import com.smartsafe.smartsafe_app.presentation.main.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -95,7 +96,7 @@ class PhoneNumberFragment : Fragment() {
     }
 
     private fun gotToMain() {
-        startActivity(Intent(activity, AuthActivity::class.java))
+        startActivity(Intent(activity, MainActivity::class.java))
         activity?.finish()
     }
 }

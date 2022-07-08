@@ -60,6 +60,7 @@
         style="@style/GeneralButton"
         android:layout_margin="20dp"
         android:background="@drawable/bg_button"
+        android:stateListAnimator="@null"
         android:text="@string/phone_number_intro"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

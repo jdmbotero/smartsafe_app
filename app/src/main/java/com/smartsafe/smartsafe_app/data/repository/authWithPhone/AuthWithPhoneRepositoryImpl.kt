@@ -22,8 +22,8 @@ class AuthWithPhoneRepositoryImpl @Inject constructor(
 
     companion object {
         const val LOG_TAG = "AuthWithPhoneRepository"
-        val isUserLogged = FirebaseAuth.getInstance().currentUser != null
-        val currentUser = FirebaseAuth.getInstance().currentUser
+        var isUserLogged = FirebaseAuth.getInstance().currentUser != null
+        var currentUser = FirebaseAuth.getInstance().currentUser
     }
 
     override suspend fun verifyPhoneNumber(
@@ -35,8 +35,8 @@ class AuthWithPhoneRepositoryImpl @Inject constructor(
                 object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
                     override fun onVerificationCompleted(credential: PhoneAuthCredential) {
                         Log.d(LOG_TAG, "onVerificationCompleted: $credential")
-                        trySend(VerifyPhoneNumberState.VerificationCompleted)
                         signInWithPhoneAuthCredential(credential)
+                        trySend(VerifyPhoneNumberState.VerificationCompleted)
                     }
 
                     override fun onVerificationFailed(e: FirebaseException) {
@@ -77,6 +77,8 @@ class AuthWithPhoneRepositoryImpl @Inject constructor(
                 .addOnCompleteListener(application.mainExecutor) { task ->
                     if (task.isSuccessful) {
                         Log.d(LOG_TAG, "signInWithCredential: success")
+                        isUserLogged = FirebaseAuth.getInstance().currentUser != null
+                        currentUser = FirebaseAuth.getInstance().currentUser
                         trySend(SignInWithPhoneState.Success(task.result?.user))
                     } else {
                         Log.w(LOG_TAG, "signInWithCredential: failure", task.exception)
