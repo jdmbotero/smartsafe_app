@@ -52,6 +52,7 @@
         tools:text="test" />
 
     <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/buttonBox"
         style="@style/GeneralButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
