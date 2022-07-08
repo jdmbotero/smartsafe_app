@@ -11,6 +11,7 @@ import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.smartsafe.smartsafe_app.R
 import com.smartsafe.smartsafe_app.databinding.FragmentBoxNewBinding
 import com.smartsafe.smartsafe_app.domain.entity.Box
@@ -92,7 +93,7 @@ class BoxNewFragment : Fragment() {
             boxNewViewModel.state.collect { state ->
                 when (state) {
                     is BoxNewState.Loading -> showLoading()
-                    is BoxNewState.Success -> goToBoxDetail(state.box)
+                    is BoxNewState.Success -> goBack()
                     is BoxNewState.Error -> showError(state.message)
                     is BoxNewState.Idle -> {}
                 }
@@ -114,7 +115,8 @@ class BoxNewFragment : Fragment() {
         }
     }
 
-    private fun goToBoxDetail(box: Box) {
-
+    private fun goBack() {
+        binding.loading.hide()
+        findNavController().popBackStack()
     }
 }

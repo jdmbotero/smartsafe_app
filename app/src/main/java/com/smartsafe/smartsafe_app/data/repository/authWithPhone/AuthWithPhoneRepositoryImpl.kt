@@ -5,15 +5,19 @@ import android.util.Log
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.*
 import com.smartsafe.smartsafe_app.SmartSafeApplication
+import com.smartsafe.smartsafe_app.di.ApplicationScope
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 
 class AuthWithPhoneRepositoryImpl @Inject constructor(
-    private val application: Application
+    private val application: Application,
+    @ApplicationScope private val externalScope: CoroutineScope
 ) : AuthWithPhoneRepository {
 
     private val firebaseAuth: FirebaseAuth by lazy {
@@ -35,8 +39,18 @@ class AuthWithPhoneRepositoryImpl @Inject constructor(
                 object : PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
                     override fun onVerificationCompleted(credential: PhoneAuthCredential) {
                         Log.d(LOG_TAG, "onVerificationCompleted: $credential")
-                        signInWithPhoneAuthCredential(credential)
-                        trySend(VerifyPhoneNumberState.VerificationCompleted)
+                        externalScope.launch {
+                            signInWithPhoneAuthCredential(credential).collect {
+                                when (it) {
+                                    is SignInWithPhoneState.Success -> trySend(
+                                        VerifyPhoneNumberState.VerificationCompleted
+                                    )
+                                    is SignInWithPhoneState.Failure -> trySend(
+                                        VerifyPhoneNumberState.VerificationFailed(it.message)
+                                    )
+                                }
+                            }
+                        }
                     }
 
                     override fun onVerificationFailed(e: FirebaseException) {
