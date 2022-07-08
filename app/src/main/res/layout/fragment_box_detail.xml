@@ -21,8 +21,7 @@
             android:background="@color/bg_app"
             android:minHeight="?attr/actionBarSize"
             app:title="@string/app_name"
-            app:titleTextColor="@color/white">
-        </androidx.appcompat.widget.Toolbar>
+            app:titleTextColor="@color/white" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -30,8 +29,36 @@
         android:id="@+id/boxDetailDoorStatusText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:drawablePadding="5dp"
+        android:textSize="18sp"
+        app:drawableStartCompat="@drawable/ic_dot"
+        app:drawableTint="@color/green"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/appBar" />
+        app:layout_constraintTop_toBottomOf="@id/appBar"
+        tools:text="test" />
+
+    <TextView
+        android:id="@+id/boxDetailNearStatusText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:drawablePadding="5dp"
+        android:textSize="18sp"
+        app:drawableStartCompat="@drawable/ic_dot"
+        app:drawableTint="@color/yellow"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/boxDetailDoorStatusText"
+        tools:text="test" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        style="@style/GeneralButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/boxDetailNearStatusText"
+        android:textSize="16sp"
+        android:layout_margin="20dp"
+        android:text="@string/open_box"/>
 
     <com.smartsafe.smartsafe_app.presentation.components.loading.LoadingViewComponent
         android:id="@+id/loading"

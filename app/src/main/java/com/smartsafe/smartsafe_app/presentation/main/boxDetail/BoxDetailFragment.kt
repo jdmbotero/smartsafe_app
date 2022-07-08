@@ -4,11 +4,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import com.smartsafe.smartsafe_app.R
 import com.smartsafe.smartsafe_app.databinding.FragmentBoxDetailBinding
 import com.smartsafe.smartsafe_app.domain.entity.Box
+import com.smartsafe.smartsafe_app.domain.entity.DoorStatus
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -77,6 +80,14 @@ class BoxDetailFragment : Fragment() {
         binding.loading.hide()
         box?.let {
             binding.boxDetailDoorStatusText.text = box.doorStatus?.value
+
+            binding.boxDetailDoorStatusText.compoundDrawables[0].setTint(
+                if (box.doorStatus!! == DoorStatus.OPEN)
+                    ContextCompat.getColor(requireContext(), R.color.yellow)
+                else
+                    ContextCompat.getColor(requireContext(), R.color.green)
+            )
+
         }
     }
 }
