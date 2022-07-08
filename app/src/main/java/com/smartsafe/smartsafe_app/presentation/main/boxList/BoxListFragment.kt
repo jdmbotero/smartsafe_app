@@ -75,7 +75,6 @@ class BoxListFragment : Fragment() {
     }
 
     private fun observeViewModel() {
-        boxListViewModel.handleIntent()
         lifecycleScope.launch {
             boxListViewModel.state.collect { state ->
                 when (state) {

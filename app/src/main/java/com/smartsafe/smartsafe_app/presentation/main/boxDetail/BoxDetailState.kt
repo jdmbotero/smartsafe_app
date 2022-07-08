@@ -6,6 +6,6 @@ sealed class BoxDetailState {
     object Idle : BoxDetailState()
     object Loading : BoxDetailState()
     data class SuccessFetch(val box: Box?) : BoxDetailState()
-    object SuccessOpenOrClose : BoxDetailState()
+    data class SuccessOpenOrClose(val box: Box?) : BoxDetailState()
     data class Error(val message: String?) : BoxDetailState()
 }

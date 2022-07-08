@@ -13,6 +13,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -36,7 +37,7 @@ class ProfileViewModel @Inject constructor(
 
     private fun handleIntent() {
         viewModelScope.launch {
-            userIntent.consumeAsFlow().collect {
+            userIntent.consumeAsFlow().collectLatest {
                 when (it) {
                     is ProfileIntent.Logout -> logout()
                     is ProfileIntent.FetchUser -> fetchUser()

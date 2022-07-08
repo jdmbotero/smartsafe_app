@@ -14,6 +14,7 @@ import com.smartsafe.smartsafe_app.domain.entity.Box
 import com.smartsafe.smartsafe_app.domain.entity.DoorAction
 import com.smartsafe.smartsafe_app.domain.entity.DoorStatus
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -50,13 +51,12 @@ class BoxDetailFragment : Fragment() {
     }
 
     private fun observeViewModel() {
-        boxDetailViewModel.handleIntent()
         lifecycleScope.launch {
-            boxDetailViewModel.state.collect { state ->
+            boxDetailViewModel.state.collectLatest { state ->
                 when (state) {
                     is BoxDetailState.Loading -> showLoading()
                     is BoxDetailState.SuccessFetch -> refreshBoxInfo(state.box)
-                    is BoxDetailState.SuccessOpenOrClose -> {}
+                    is BoxDetailState.SuccessOpenOrClose -> refreshBoxInfo(state.box)
                     is BoxDetailState.Error -> showError(state.message)
                     is BoxDetailState.Idle -> {}
                 }

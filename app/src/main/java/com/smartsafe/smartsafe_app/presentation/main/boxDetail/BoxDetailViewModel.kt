@@ -13,6 +13,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -33,9 +34,9 @@ class BoxDetailViewModel @Inject constructor(
         handleIntent()
     }
 
-    fun handleIntent() {
+    private fun handleIntent() {
         viewModelScope.launch {
-            userIntent.consumeAsFlow().collect {
+            userIntent.consumeAsFlow().collectLatest {
                 when (it) {
                     is BoxDetailIntent.FetchBox -> fetchBox(it.box)
                     is BoxDetailIntent.OpenOrCloseBox -> openOrCloseBox(it.box, it.action)
@@ -70,7 +71,7 @@ class BoxDetailViewModel @Inject constructor(
             addOrUpdateBoxUseCase.launch(box)
             addOrUpdateBoxUseCase.resultFlow.collect { state ->
                 _state.value = when (state) {
-                    is AddOrUpdateBoxState.Success -> BoxDetailState.SuccessOpenOrClose
+                    is AddOrUpdateBoxState.Success -> BoxDetailState.SuccessOpenOrClose(state.box)
                     is AddOrUpdateBoxState.Failure -> BoxDetailState.Error(state.message)
                 }
             }
