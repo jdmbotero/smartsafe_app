@@ -51,4 +51,27 @@ class BoxRepositoryImpl @Inject constructor() : BoxRepository {
                 }
             awaitClose()
         }
+
+    override suspend fun fetchBox(boxId: String): Flow<FetchBoxState> = callbackFlow {
+        val docRef = firestoreDb.collection(FIRESTORE_BOX_COLLECTION).document(boxId)
+        val registration = docRef.addSnapshotListener { snapshot, e ->
+            if (e != null) {
+                Log.w(LOG_TAG, "Listen failed.", e)
+                trySend(FetchBoxState.Failure(e.message))
+                return@addSnapshotListener
+            }
+
+            if (snapshot != null && snapshot.exists()) {
+                Log.d(LOG_TAG, "Current data: ${snapshot.data}")
+                trySend(FetchBoxState.Success(snapshot.toObject(Box::class.java)))
+            } else {
+                Log.d(LOG_TAG, "Current data: null")
+                trySend(FetchBoxState.Success())
+            }
+        }
+
+        awaitClose {
+            registration.remove()
+        }
+    }
 }

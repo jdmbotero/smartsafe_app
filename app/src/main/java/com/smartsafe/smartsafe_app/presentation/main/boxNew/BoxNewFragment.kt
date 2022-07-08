@@ -11,6 +11,7 @@ import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import com.smartsafe.smartsafe_app.R
 import com.smartsafe.smartsafe_app.databinding.FragmentBoxNewBinding
 import com.smartsafe.smartsafe_app.domain.entity.Box
 import com.smartsafe.smartsafe_app.util.BiometricManager
@@ -24,11 +25,6 @@ class BoxNewFragment : Fragment() {
     private val boxNewViewModel: BoxNewViewModel by activityViewModels()
     private lateinit var biometricManager: BiometricManager
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        observeViewModel()
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -39,6 +35,7 @@ class BoxNewFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        observeViewModel()
         setUpView()
         configureBiometric()
     }
@@ -65,14 +62,20 @@ class BoxNewFragment : Fragment() {
 
     private fun configureBiometric() {
         context?.let {
-            biometricManager = BiometricManager(this, it, onSuccess = {
-                saveBox(
-                    binding.boxIdText.editText?.text.toString(),
-                    binding.boxNameText.editText?.text.toString()
-                )
-            }, onError = { message ->
-                showError(message)
-            })
+            biometricManager = BiometricManager(
+                this,
+                it,
+                title = getString(R.string.biometric_title),
+                subtitle = getString(R.string.biometric_subtitle),
+                onSuccess = {
+                    saveBox(
+                        binding.boxIdText.editText?.text.toString(),
+                        binding.boxNameText.editText?.text.toString()
+                    )
+                },
+                onError = { message ->
+                    showError(message)
+                })
             biometricManager.enrollBiometricRequestLauncher =
                 registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { activityResult ->
                     if (activityResult.resultCode == Activity.RESULT_OK) {

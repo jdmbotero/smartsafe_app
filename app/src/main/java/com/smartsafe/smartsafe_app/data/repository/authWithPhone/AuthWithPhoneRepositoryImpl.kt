@@ -86,5 +86,9 @@ class AuthWithPhoneRepositoryImpl @Inject constructor(
             awaitClose()
         }
 
+    override suspend fun logout() {
+        firebaseAuth.signOut()
+    }
+
     override fun getCurrentUser(): FirebaseUser? = firebaseAuth.currentUser
 }

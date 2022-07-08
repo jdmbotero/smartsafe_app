@@ -21,4 +21,9 @@
     <string name="near_state_box">Alguien está cerca de la caja</string>
     <string name="unlock_fingerprint">Activar funciones de la caja con huella</string>
     <string name="label_dont_registered_boxes">AÚN NO TIENES\nCAJAS REGISTRADAS</string>
+
+    <string name="biometric_title">Autenticación Biometrica</string>
+    <string name="biometric_subtitle">Por favor verifica tu identidad primero</string>
+
+    <string name="profile_logout">Salir</string>
 </resources>

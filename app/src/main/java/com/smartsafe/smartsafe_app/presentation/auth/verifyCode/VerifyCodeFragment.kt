@@ -8,9 +8,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import com.fraggjkee.smsconfirmationview.SmsConfirmationView
 import com.smartsafe.smartsafe_app.databinding.FragmentVerifyCodeBinding
-import com.smartsafe.smartsafe_app.presentation.auth.AuthActivity
-import com.wynsbin.vciv.VerificationCodeInputView.OnInputListener
+import com.smartsafe.smartsafe_app.presentation.main.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -25,11 +25,6 @@ class VerifyCodeFragment : Fragment() {
         const val VERIFICATION_ID_PARAM = "verificationId"
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        observeViewModel()
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -40,6 +35,7 @@ class VerifyCodeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        observeViewModel()
 
         arguments?.let {
             verificationId = it.getString(VERIFICATION_ID_PARAM, "")
@@ -49,13 +45,12 @@ class VerifyCodeFragment : Fragment() {
     }
 
     private fun setUpView() {
-        binding.verifyCodeText.setOnInputListener(object : OnInputListener {
-            override fun onComplete(code: String) {
-                verifyPhoneNumber(code)
+        binding.verifyCodeText.onChangeListener =
+            SmsConfirmationView.OnChangeListener { code, isComplete ->
+                if (isComplete) {
+                    verifyPhoneNumber(code)
+                }
             }
-
-            override fun onInput() {}
-        })
     }
 
     private fun observeViewModel() {
@@ -91,7 +86,7 @@ class VerifyCodeFragment : Fragment() {
     }
 
     private fun gotToMain() {
-        startActivity(Intent(activity, AuthActivity::class.java))
+        startActivity(Intent(activity, MainActivity::class.java))
         activity?.finish()
     }
 }

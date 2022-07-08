@@ -12,10 +12,26 @@
         <action
             android:id="@+id/action_boxListFragment_to_boxNewFragment"
             app:destination="@id/boxNewFragment" />
+        <action
+            android:id="@+id/action_boxListFragment_to_boxDetailFragment"
+            app:destination="@id/boxDetailFragment" />
+        <action
+            android:id="@+id/action_boxListFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
     </fragment>
     <fragment
         android:id="@+id/boxNewFragment"
         android:name="com.smartsafe.smartsafe_app.presentation.main.boxNew.BoxNewFragment"
         android:label="fragment_box_new"
         tools:layout="@layout/fragment_box_new" />
+    <fragment
+        android:id="@+id/boxDetailFragment"
+        android:name="com.smartsafe.smartsafe_app.presentation.main.boxDetail.BoxDetailFragment"
+        android:label="fragment_box_detail"
+        tools:layout="@layout/fragment_box_detail" />
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.smartsafe.smartsafe_app.presentation.auth.profile.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" />
 </navigation>

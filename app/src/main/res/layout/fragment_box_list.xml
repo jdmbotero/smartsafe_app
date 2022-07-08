@@ -24,7 +24,7 @@
             app:titleTextColor="@color/white">
 
             <ImageButton
-                android:id="@+id/buttonMenu"
+                android:id="@+id/toolbarProfileButton"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_gravity="end"
@@ -78,7 +78,7 @@
         tools:listitem="@layout/item_box" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/containedButton"
+        android:id="@+id/boxListButtonNew"
         style="@style/Widget.MaterialComponents.Button.Icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
