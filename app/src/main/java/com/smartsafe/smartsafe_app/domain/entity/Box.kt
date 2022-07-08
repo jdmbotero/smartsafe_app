@@ -6,8 +6,8 @@ data class Box(
     var id: String? = null,
     var name: String? = null,
     var userId: String? = null,
-    var doorStatus: DoorStatus? = null,
-    var doorAction: DoorAction? = null,
+    var doorStatus: DoorStatus = DoorStatus.CLOSED,
+    var doorAction: DoorAction = DoorAction.CLOSE,
     var distanceObject: Float? = null,
     var lightStatus: LightStatus? = null,
     var history: List<String> = listOf()

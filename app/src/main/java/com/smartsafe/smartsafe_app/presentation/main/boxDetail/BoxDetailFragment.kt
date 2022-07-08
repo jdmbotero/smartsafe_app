@@ -11,6 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import com.smartsafe.smartsafe_app.R
 import com.smartsafe.smartsafe_app.databinding.FragmentBoxDetailBinding
 import com.smartsafe.smartsafe_app.domain.entity.Box
+import com.smartsafe.smartsafe_app.domain.entity.DoorAction
 import com.smartsafe.smartsafe_app.domain.entity.DoorStatus
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -36,25 +37,26 @@ class BoxDetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        observeViewModel()
-
         arguments?.let {
             box = it.getSerializable(BOX_PARAM) as Box
         }
-
+        observeViewModel()
         setUpView()
         fetchBox()
     }
 
     private fun setUpView() {
+        binding.boxDetailButtonOpenOrClose.setOnClickListener { openOrCloseBox() }
     }
 
     private fun observeViewModel() {
+        boxDetailViewModel.handleIntent()
         lifecycleScope.launch {
             boxDetailViewModel.state.collect { state ->
                 when (state) {
                     is BoxDetailState.Loading -> showLoading()
-                    is BoxDetailState.Success -> refreshBoxInfo(state.box)
+                    is BoxDetailState.SuccessFetch -> refreshBoxInfo(state.box)
+                    is BoxDetailState.SuccessOpenOrClose -> {}
                     is BoxDetailState.Error -> showError(state.message)
                     is BoxDetailState.Idle -> {}
                 }
@@ -63,11 +65,11 @@ class BoxDetailFragment : Fragment() {
     }
 
     private fun showLoading() {
-        binding.loading.show()
+        // binding.loading.show()
     }
 
     private fun showError(message: String?) {
-        binding.loading.hide()
+        // binding.loading.hide()
     }
 
     private fun fetchBox() {
@@ -79,15 +81,59 @@ class BoxDetailFragment : Fragment() {
     private fun refreshBoxInfo(box: Box?) {
         binding.loading.hide()
         box?.let {
-            binding.boxDetailDoorStatusText.text = box.doorStatus?.value
+            this.box = box
+            binding.boxDetailDoorStatusText.text = when (box.doorStatus) {
+                DoorStatus.OPEN -> getString(R.string.open_state_box)
+                DoorStatus.CLOSED -> getString(R.string.closed_state_box)
+            }
 
-            binding.boxDetailDoorStatusText.compoundDrawables[0].setTint(
-                if (box.doorStatus!! == DoorStatus.OPEN)
-                    ContextCompat.getColor(requireContext(), R.color.yellow)
-                else
-                    ContextCompat.getColor(requireContext(), R.color.green)
+            binding.boxDetailDoorStatusIndicator.backgroundTintList =
+                when (box.doorStatus) {
+                    DoorStatus.OPEN -> ContextCompat.getColorStateList(
+                        requireContext(),
+                        R.color.yellow
+                    )
+                    DoorStatus.CLOSED -> ContextCompat.getColorStateList(
+                        requireContext(),
+                        R.color.green
+                    )
+                }
+
+            binding.boxDetailNearStatusText.text =
+                if ((box.distanceObject ?: 0f) > 0 && (box.distanceObject ?: 0f) < 200f) {
+                    getString(R.string.near_state_box, box.distanceObject)
+                } else if ((box.distanceObject ?: 0f) > 200f) {
+                    getString(R.string.near_state_box, box.distanceObject)
+                } else {
+                    getString(R.string.near_state_box_clear)
+                }
+
+            binding.boxDetailNearStatusIndicator.backgroundTintList =
+                if ((box.distanceObject ?: 0f) > 0 && (box.distanceObject ?: 0f) < 200f) {
+                    ContextCompat.getColorStateList(requireContext(), R.color.yellow)
+                } else if ((box.distanceObject ?: 0f) > 200f) {
+                    ContextCompat.getColorStateList(requireContext(), R.color.green)
+                } else {
+                    ContextCompat.getColorStateList(requireContext(), R.color.green)
+                }
+
+            binding.boxDetailButtonOpenOrClose.text = when (box.doorStatus) {
+                DoorStatus.OPEN -> getString(R.string.close_box)
+                DoorStatus.CLOSED -> getString(R.string.open_box)
+            }
+        }
+    }
+
+    private fun openOrCloseBox() {
+        lifecycleScope.launch {
+            boxDetailViewModel.userIntent.send(
+                BoxDetailIntent.OpenOrCloseBox(
+                    box, when (box.doorStatus) {
+                        DoorStatus.OPEN -> DoorAction.CLOSE
+                        DoorStatus.CLOSED -> DoorAction.OPEN
+                    }
+                )
             )
-
         }
     }
 }

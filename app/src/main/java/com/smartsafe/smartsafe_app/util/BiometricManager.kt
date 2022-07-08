@@ -48,7 +48,7 @@ class BiometricManager constructor(
             override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
                 super.onAuthenticationSucceeded(result)
                 onSuccess?.invoke()
-                Log.e(LOG_TAG, "Authentication successful!")
+                Log.d(LOG_TAG, "Authentication successful!")
             }
         },
     )

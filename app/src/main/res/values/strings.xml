@@ -17,7 +17,8 @@
     <string name="close_box">Cerrar caja</string>
     <string name="open_state_box">La caja está abierta</string>
     <string name="closed_state_box">La caja está cerrada</string>
-    <string name="near_state_box">Alguien está cerca de la caja</string>
+    <string name="near_state_box">Algo está cerca de la caja a %s cm</string>
+    <string name="near_state_box_clear">No hay nada cerca de la caja</string>
     <string name="unlock_fingerprint">Activar funciones de la caja con huella</string>
     <string name="label_dont_registered_boxes">AÚN NO TIENES\nCAJAS REGISTRADAS</string>
 

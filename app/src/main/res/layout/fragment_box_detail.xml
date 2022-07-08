@@ -25,41 +25,62 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
+    <View
+        android:id="@+id/boxDetailDoorStatusIndicator"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="30dp"
+        android:background="@drawable/ic_dot"
+        android:backgroundTint="@color/green"
+        app:layout_constraintBottom_toBottomOf="@id/boxDetailDoorStatusText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/boxDetailDoorStatusText" />
+
     <TextView
         android:id="@+id/boxDetailDoorStatusText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:drawablePadding="5dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="30dp"
         android:textSize="18sp"
-        app:drawableStartCompat="@drawable/ic_dot"
-        app:drawableTint="@color/green"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@id/boxDetailDoorStatusIndicator"
         app:layout_constraintTop_toBottomOf="@id/appBar"
-        tools:text="test" />
+        tools:text="Test" />
+
+    <View
+        android:id="@+id/boxDetailNearStatusIndicator"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="30dp"
+        android:background="@drawable/ic_dot"
+        android:backgroundTint="@color/green"
+        app:layout_constraintBottom_toBottomOf="@id/boxDetailNearStatusText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/boxDetailNearStatusText" />
 
     <TextView
         android:id="@+id/boxDetailNearStatusText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:drawablePadding="5dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="30dp"
         android:textSize="18sp"
-        app:drawableStartCompat="@drawable/ic_dot"
-        app:drawableTint="@color/yellow"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@id/boxDetailNearStatusIndicator"
         app:layout_constraintTop_toBottomOf="@id/boxDetailDoorStatusText"
-        tools:text="test" />
+        tools:text="Test" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/buttonBox"
+        android:id="@+id/boxDetailButtonOpenOrClose"
         style="@style/GeneralButton"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/boxDetailNearStatusText"
+        android:layout_marginHorizontal="30dp"
+        android:layout_marginTop="40dp"
+        android:text="@string/open_box"
         android:textSize="16sp"
-        android:layout_margin="20dp"
-        android:text="@string/open_box"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/boxDetailNearStatusText" />
 
     <com.smartsafe.smartsafe_app.presentation.components.loading.LoadingViewComponent
         android:id="@+id/loading"
