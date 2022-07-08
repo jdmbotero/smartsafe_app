@@ -3,7 +3,7 @@ package com.smartsafe.smartsafe_app.presentation.auth.verifyCode
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.smartsafe.smartsafe_app.data.repository.authWithPhone.SignInWithPhoneState
-import com.smartsafe.smartsafe_app.domain.interactor.GenericResponseState
+import com.smartsafe.smartsafe_app.data.repository.user.AddOrUpdateUserState
 import com.smartsafe.smartsafe_app.domain.interactor.auth.VerifyCodeUseCase
 import com.smartsafe.smartsafe_app.domain.interactor.user.AddOrUpdateUserUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -47,13 +47,13 @@ class VerifyCodeViewModel @Inject constructor(
             when (signInWithPhoneState) {
                 is SignInWithPhoneState.Success -> {
                     signInWithPhoneState.user?.let {
-                        addOrUpdateUserUseCase.launch(it.uid)
+                        addOrUpdateUserUseCase.launch(Pair(it.uid, null))
                         addOrUpdateUserUseCase.resultFlow.collect { userResponse ->
                             _state.value = when (userResponse) {
-                                is GenericResponseState.Success<*> -> VerifyCodeState.Success(
+                                is AddOrUpdateUserState.Success -> VerifyCodeState.Success(
                                     signInWithPhoneState.user
                                 )
-                                is GenericResponseState.Failure -> VerifyCodeState.Error(
+                                is AddOrUpdateUserState.Failure -> VerifyCodeState.Error(
                                     userResponse.message
                                 )
                             }

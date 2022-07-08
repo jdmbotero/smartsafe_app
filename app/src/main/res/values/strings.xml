@@ -7,7 +7,6 @@
     <string name="text_cancel">Cancelar</string>
     <string name="code_verification">Código de verificación</string>
 
-
     <string name="my_boxes">Mis cajas</string>
     <string name="register_box">Registrar caja</string>
     <string name="note_scan_qr">Haz click en botón para escanear el código QR que se encuentra en el interior de la caja</string>
@@ -25,5 +24,7 @@
     <string name="biometric_title">Autenticación Biometrica</string>
     <string name="biometric_subtitle">Por favor verifica tu identidad primero</string>
 
+    <string name="profile_name">Nombre</string>
+    <string name="save">Guardar</string>
     <string name="profile_logout">Salir</string>
 </resources>

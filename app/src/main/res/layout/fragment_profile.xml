@@ -27,15 +27,53 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/profileNameText"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:layout_marginBottom="60dp"
+        android:background="@null"
+        android:hint="@string/profile_name"
+        android:textColorHint="@color/black"
+        app:boxStrokeColor="@color/pink"
+        app:hintTextColor="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/appBar"
+        app:placeholderTextColor="@color/black"
+        app:shapeAppearance="@color/black">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:textColor="@color/black"
+            android:textColorHint="@color/black" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/profileButtonLogout"
+        android:id="@+id/profileButtonSave"
         style="@style/GeneralButton"
         android:layout_margin="20dp"
         android:background="@drawable/bg_button"
+        android:stateListAnimator="@null"
+        android:text="@string/save"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/profileNameText" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/profileButtonLogout"
+        style="@style/SecondaryButton"
+        android:layout_margin="20dp"
+        android:stateListAnimator="@null"
         android:text="@string/profile_logout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/appBar" />
+        app:layout_constraintTop_toBottomOf="@id/profileButtonSave" />
 
     <com.smartsafe.smartsafe_app.presentation.components.loading.LoadingViewComponent
         android:id="@+id/loading"

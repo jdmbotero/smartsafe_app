@@ -21,8 +21,7 @@
             android:background="@color/bg_app"
             android:minHeight="?attr/actionBarSize"
             app:title="@string/app_name"
-            app:titleTextColor="@color/white">
-        </androidx.appcompat.widget.Toolbar>
+            app:titleTextColor="@color/white"></androidx.appcompat.widget.Toolbar>
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -85,6 +84,7 @@
         style="@style/GeneralButton"
         android:layout_margin="20dp"
         android:background="@drawable/bg_button"
+        android:stateListAnimator="@null"
         android:text="@string/register_box"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

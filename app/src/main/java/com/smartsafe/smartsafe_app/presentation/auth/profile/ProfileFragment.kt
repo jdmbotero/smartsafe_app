@@ -5,10 +5,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.smartsafe.smartsafe_app.databinding.FragmentProfileBinding
+import com.smartsafe.smartsafe_app.domain.entity.User
 import com.smartsafe.smartsafe_app.presentation.auth.AuthActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -31,9 +33,19 @@ class ProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         observeViewModel()
         setUpView()
+        fetchUser()
     }
 
     private fun setUpView() {
+        binding.profileButtonSave.isEnabled = false
+        binding.profileNameText.editText?.doOnTextChanged { inputText, _, _, _ ->
+            binding.profileButtonSave.isEnabled = (inputText?.length ?: 0) > 0
+        }
+
+        binding.profileButtonSave.setOnClickListener {
+            updateUser(binding.profileNameText.editText?.text.toString())
+        }
+
         binding.profileButtonLogout.setOnClickListener {
             logout()
         }
@@ -45,7 +57,8 @@ class ProfileFragment : Fragment() {
                 when (state) {
                     is ProfileState.Loading -> showLoading()
                     is ProfileState.LogoutSuccess -> goToLogin()
-                    is ProfileState.UpdateUserSuccess -> {}
+                    is ProfileState.FetchUserSuccess -> refreshUserInfo(state.user)
+                    is ProfileState.UpdateUserSuccess -> binding.loading.hide()
                     is ProfileState.Error -> showError(state.message)
                     is ProfileState.Idle -> {}
                 }
@@ -59,6 +72,23 @@ class ProfileFragment : Fragment() {
 
     private fun showError(message: String?) {
         binding.loading.hide()
+    }
+
+    private fun fetchUser() {
+        lifecycleScope.launch {
+            profileViewModel.userIntent.send(ProfileIntent.FetchUser)
+        }
+    }
+
+    private fun refreshUserInfo(user: User?) {
+        binding.loading.hide()
+        binding.profileNameText.editText?.setText(user?.name)
+    }
+
+    private fun updateUser(name: String) {
+        lifecycleScope.launch {
+            profileViewModel.userIntent.send(ProfileIntent.UpdateUser(User(name = name)))
+        }
     }
 
     private fun logout() {

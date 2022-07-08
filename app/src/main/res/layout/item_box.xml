@@ -3,49 +3,59 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:paddingHorizontal="15dp"
+    android:paddingVertical="10dp">
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         app:cardBackgroundColor="@color/pink_light"
         app:cardCornerRadius="10dp"
-        app:cardElevation="2dp"
-        app:strokeWidth="1dp"
-        android:layout_margin="2dp"
-        app:strokeColor="@color/white">
+        app:cardElevation="1dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/boxTextId"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:textStyle="bold"
-                tools:text="ID" />
+            android:layout_marginHorizontal="25dp"
+            android:layout_marginVertical="20dp">
 
             <TextView
                 android:id="@+id/boxTextName"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@id/boxTextId"
+                app:layout_constraintEnd_toStartOf="@id/boxRightArrow"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/boxTextId"
-                tools:text="name" />
-        </LinearLayout>
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Name" />
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="20dp"
-            android:layout_gravity="end|center_vertical"
-            android:src="@mipmap/ic_next"/>
+            <TextView
+                android:id="@+id/boxTextId"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/boxRightArrow"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/boxTextName"
+                tools:text="Id" />
+
+            <ImageView
+                android:id="@+id/boxRightArrow"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:src="@mipmap/ic_next"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/boxTextName"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
