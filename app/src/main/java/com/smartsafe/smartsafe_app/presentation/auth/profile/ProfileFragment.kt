@@ -99,7 +99,9 @@ class ProfileFragment : Fragment() {
 
     private fun goToLogin() {
         binding.loading.hide()
-        startActivity(Intent(activity, AuthActivity::class.java))
+        val intent = Intent(activity, AuthActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        startActivity(intent)
         activity?.finish()
     }
 }

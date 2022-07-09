@@ -25,33 +25,35 @@ class BiometricManager constructor(
         const val LOG_TAG = "BiometricManager"
     }
 
-    private var biometricManager: BiometricManager = BiometricManager.from(context)
-    private var executor: Executor = ContextCompat.getMainExecutor(context)
-    private var biometricPrompt: BiometricPrompt = BiometricPrompt(
-        fragment, executor,
-        object : BiometricPrompt.AuthenticationCallback() {
-            override fun onAuthenticationError(
-                errorCode: Int,
-                errString: CharSequence
-            ) {
-                super.onAuthenticationError(errorCode, errString)
-                onError?.invoke("Authentication error: Code: $errorCode ($errString)")
-                Log.e(LOG_TAG, "Authentication error: Code: $errorCode ($errString)")
-            }
+    private val biometricManager: BiometricManager = BiometricManager.from(context)
+    private val executor: Executor = ContextCompat.getMainExecutor(context)
+    private val biometricPrompt: BiometricPrompt by lazy {
+        BiometricPrompt(
+            fragment, executor,
+            object : BiometricPrompt.AuthenticationCallback() {
+                override fun onAuthenticationError(
+                    errorCode: Int,
+                    errString: CharSequence
+                ) {
+                    super.onAuthenticationError(errorCode, errString)
+                    onError?.invoke("Authentication error: Code: $errorCode ($errString)")
+                    Log.e(LOG_TAG, "Authentication error: Code: $errorCode ($errString)")
+                }
 
-            override fun onAuthenticationFailed() {
-                super.onAuthenticationFailed()
-                onError?.invoke("Failed to authenticate. Please try again.")
-                Log.e(LOG_TAG, "Failed to authenticate. Please try again.")
-            }
+                override fun onAuthenticationFailed() {
+                    super.onAuthenticationFailed()
+                    onError?.invoke("Failed to authenticate. Please try again.")
+                    Log.e(LOG_TAG, "Failed to authenticate. Please try again.")
+                }
 
-            override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
-                super.onAuthenticationSucceeded(result)
-                onSuccess?.invoke()
-                Log.d(LOG_TAG, "Authentication successful!")
-            }
-        },
-    )
+                override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                    super.onAuthenticationSucceeded(result)
+                    onSuccess?.invoke()
+                    Log.d(LOG_TAG, "Authentication successful!")
+                }
+            },
+        )
+    }
     private lateinit var promptInfo: BiometricPrompt.PromptInfo
     private val authenticators =
         BiometricManager.Authenticators.BIOMETRIC_STRONG or BiometricManager.Authenticators.DEVICE_CREDENTIAL
