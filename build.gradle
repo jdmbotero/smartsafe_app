@@ -9,7 +9,7 @@ plugins {
 
 ext {
     hilt_version = '2.42'
-    navigation_version = '2.4.2'
+    navigation_version = '2.5.0'
     coroutines_version = '1.5.2'
     firebase_bom_version = '30.2.0'
 }

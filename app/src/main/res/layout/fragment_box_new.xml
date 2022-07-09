@@ -20,10 +20,55 @@
             android:layout_height="wrap_content"
             android:background="@color/bg_app"
             android:minHeight="?attr/actionBarSize"
+            app:navigationIcon="@mipmap/ic_back"
             app:title="@string/app_name"
-            app:titleTextColor="@color/white"></androidx.appcompat.widget.Toolbar>
+            app:titleTextColor="@color/white" />
 
     </com.google.android.material.appbar.AppBarLayout>
+
+    <TextView
+        android:id="@+id/noteBarCode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:gravity="center"
+        android:text="@string/note_scan_qr"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/appBar" />
+
+    <com.journeyapps.barcodescanner.DecoratedBarcodeView
+        android:id="@+id/barcodeScannerView"
+        android:layout_width="300dp"
+        android:layout_height="200dp"
+        android:layout_margin="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/noteBarCode"
+        app:layout_constraintBottom_toTopOf="@id/buttonScanner"
+        android:visibility="invisible"/>
+
+    <ImageView
+        android:id="@+id/imgScanner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/img_scann"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/noteBarCode"
+        app:layout_constraintBottom_toTopOf="@id/buttonScanner"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/buttonScanner"
+        style="@style/GeneralButton"
+        android:layout_marginTop="10dp"
+        android:text="@string/scan_box"
+        android:layout_margin="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/barcodeScannerView" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/boxIdText"
@@ -39,7 +84,7 @@
         app:hintTextColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/appBar"
+        app:layout_constraintTop_toBottomOf="@id/buttonScanner"
         app:placeholderTextColor="@color/black"
         app:shapeAppearance="@color/black">
 
@@ -48,7 +93,8 @@
             android:layout_height="wrap_content"
             android:inputType="text"
             android:textColor="@color/black"
-            android:textColorHint="@color/black" />
+            android:textColorHint="@color/black"
+            tools:text="TeST" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -86,9 +132,9 @@
         android:background="@drawable/bg_button"
         android:stateListAnimator="@null"
         android:text="@string/register_box"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/boxNameText" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <com.smartsafe.smartsafe_app.presentation.components.loading.LoadingViewComponent
         android:id="@+id/loading"
