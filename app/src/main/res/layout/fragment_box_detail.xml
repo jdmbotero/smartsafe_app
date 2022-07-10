@@ -38,12 +38,13 @@
 
     <TextView
         android:id="@+id/boxDetailDoorStatusText"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
         android:layout_marginTop="30dp"
         android:layout_marginEnd="30dp"
         android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/boxDetailDoorStatusIndicator"
         app:layout_constraintTop_toBottomOf="@id/appBar"
         tools:text="Test" />
@@ -61,14 +62,39 @@
 
     <TextView
         android:id="@+id/boxDetailNearStatusText"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
         android:layout_marginTop="15dp"
         android:layout_marginEnd="30dp"
         android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/boxDetailNearStatusIndicator"
         app:layout_constraintTop_toBottomOf="@id/boxDetailDoorStatusText"
+        tools:text="Test" />
+
+    <View
+        android:id="@+id/boxDetailLightStatusIndicator"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="30dp"
+        android:background="@drawable/ic_dot"
+        android:backgroundTint="@color/black"
+        app:layout_constraintBottom_toBottomOf="@id/boxDetailLightStatusText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/boxDetailLightStatusText" />
+
+    <TextView
+        android:id="@+id/boxDetailLightStatusText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="30dp"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/boxDetailLightStatusIndicator"
+        app:layout_constraintTop_toBottomOf="@id/boxDetailNearStatusText"
         tools:text="Test" />
 
     <androidx.appcompat.widget.AppCompatButton
@@ -80,7 +106,7 @@
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/boxDetailNearStatusText" />
+        app:layout_constraintTop_toBottomOf="@id/boxDetailLightStatusText" />
 
     <com.smartsafe.smartsafe_app.presentation.components.loading.LoadingViewComponent
         android:id="@+id/loading"

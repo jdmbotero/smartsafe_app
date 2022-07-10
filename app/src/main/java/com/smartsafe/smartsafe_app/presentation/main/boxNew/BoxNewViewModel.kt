@@ -4,8 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.smartsafe.smartsafe_app.data.repository.authWithPhone.AuthWithPhoneRepositoryImpl
 import com.smartsafe.smartsafe_app.data.repository.box.AddOrUpdateBoxState
+import com.smartsafe.smartsafe_app.data.repository.box.FetchBoxState
 import com.smartsafe.smartsafe_app.domain.entity.Box
 import com.smartsafe.smartsafe_app.domain.interactor.box.AddOrUpdateBoxUseCase
+import com.smartsafe.smartsafe_app.domain.interactor.box.FetchBoxUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,6 +19,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class BoxNewViewModel @Inject constructor(
+    private val fetchBoxUseCase: FetchBoxUseCase,
     private val addOrUpdateBoxUseCase: AddOrUpdateBoxUseCase
 ) : ViewModel() {
 
@@ -41,16 +44,40 @@ class BoxNewViewModel @Inject constructor(
     }
 
     private suspend fun addOrUpdateBox(box: Box) {
-        AuthWithPhoneRepositoryImpl.currentUser?.let {
-            _state.value = BoxNewState.Loading
-            box.userId = it.uid
-            addOrUpdateBoxUseCase.launch(box)
-            addOrUpdateBoxUseCase.resultFlow.collect { state ->
-                _state.value = when (state) {
-                    is AddOrUpdateBoxState.Success -> BoxNewState.Success(state.box)
-                    is AddOrUpdateBoxState.Failure -> BoxNewState.Error(state.message)
+        AuthWithPhoneRepositoryImpl.currentUser?.let { user ->
+            box.id?.let { boxId ->
+                _state.value = BoxNewState.Loading
+                fetchBoxUseCase.launch(boxId)
+                fetchBoxUseCase.resultFlow.collect { boxState ->
+                    when (boxState) {
+                        is FetchBoxState.Success -> {
+                            if (boxState.box == null) {
+                                _state.value = BoxNewState.Error("La caja no existe")
+                            } else if (boxState.box.userId != null) {
+                                _state.value =
+                                    BoxNewState.Error("La caja ya está asociada a otro usuario")
+                            } else {
+                                val newBox = boxState.box
+                                newBox.userId = user.uid
+                                newBox.id = box.id
+                                newBox.name = box.name
+
+                                addOrUpdateBoxUseCase.launch(newBox)
+                                addOrUpdateBoxUseCase.resultFlow.collect { state ->
+                                    _state.value = when (state) {
+                                        is AddOrUpdateBoxState.Success -> BoxNewState.Success(state.box)
+                                        is AddOrUpdateBoxState.Failure -> BoxNewState.Error(state.message)
+                                    }
+                                }
+                            }
+                        }
+                        is FetchBoxState.Failure -> {
+                            _state.value = BoxNewState.Error(boxState.message)
+                        }
+                    }
                 }
             }
+
         }
     }
 }

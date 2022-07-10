@@ -23,16 +23,18 @@ class BoxRepositoryImpl @Inject constructor() : BoxRepository {
 
     override suspend fun addOrUpdateBox(box: Box): Flow<AddOrUpdateBoxState> =
         callbackFlow {
-            firestoreDb.collection(FIRESTORE_BOX_COLLECTION).document(box.id!!)
-                .set(box)
-                .addOnSuccessListener {
-                    Log.d(LOG_TAG, "DocumentSnapshot successfully written!")
-                    trySend(AddOrUpdateBoxState.Success(box))
-                }
-                .addOnFailureListener { e ->
-                    Log.w(LOG_TAG, "Error writing document", e)
-                    trySend(AddOrUpdateBoxState.Failure(e.message))
-                }
+            box.id?.let {
+                firestoreDb.collection(FIRESTORE_BOX_COLLECTION).document(it)
+                    .set(box)
+                    .addOnSuccessListener {
+                        Log.d(LOG_TAG, "DocumentSnapshot successfully written!")
+                        trySend(AddOrUpdateBoxState.Success(box))
+                    }
+                    .addOnFailureListener { e ->
+                        Log.w(LOG_TAG, "Error writing document", e)
+                        trySend(AddOrUpdateBoxState.Failure(e.message))
+                    }
+            }
             awaitClose()
         }
 

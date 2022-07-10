@@ -19,6 +19,8 @@
     <string name="closed_state_box">La caja está cerrada</string>
     <string name="near_state_box">Algo está cerca de la caja a %s cm</string>
     <string name="near_state_box_clear">No hay nada cerca de la caja</string>
+    <string name="light_state_box_on">La luz de la caja está encendida</string>
+    <string name="light_state_box_off">La luz de la caja está apagada</string>
     <string name="unlock_fingerprint">Activar funciones de la caja con huella</string>
     <string name="label_dont_registered_boxes">AÚN NO TIENES\nCAJAS REGISTRADAS</string>
 

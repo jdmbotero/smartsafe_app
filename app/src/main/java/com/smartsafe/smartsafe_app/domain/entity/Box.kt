@@ -7,8 +7,7 @@ data class Box(
     var name: String? = null,
     var userId: String? = null,
     var doorStatus: DoorStatus = DoorStatus.CLOSED,
-    var doorAction: DoorAction = DoorAction.CLOSE,
+    var doorAction: DoorAction? = null,
     var distanceObject: Float? = null,
-    var lightStatus: LightStatus? = null,
-    var history: List<String> = listOf()
+    var lightStatus: LightStatus = LightStatus.OFF
 ) : Serializable

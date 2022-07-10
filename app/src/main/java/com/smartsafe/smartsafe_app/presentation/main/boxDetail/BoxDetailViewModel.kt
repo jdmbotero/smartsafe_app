@@ -62,12 +62,6 @@ class BoxDetailViewModel @Inject constructor(
         box.id?.let {
             _state.value = BoxDetailState.Loading
             box.doorAction = action
-
-            // Temporally
-            box.doorStatus = when (action) {
-                DoorAction.OPEN -> DoorStatus.OPEN
-                DoorAction.CLOSE -> DoorStatus.CLOSED
-            }
             addOrUpdateBoxUseCase.launch(box)
             addOrUpdateBoxUseCase.resultFlow.collect { state ->
                 _state.value = when (state) {

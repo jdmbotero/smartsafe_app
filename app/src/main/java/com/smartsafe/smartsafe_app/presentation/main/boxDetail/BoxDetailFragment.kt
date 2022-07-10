@@ -13,9 +13,11 @@ import com.smartsafe.smartsafe_app.databinding.FragmentBoxDetailBinding
 import com.smartsafe.smartsafe_app.domain.entity.Box
 import com.smartsafe.smartsafe_app.domain.entity.DoorAction
 import com.smartsafe.smartsafe_app.domain.entity.DoorStatus
+import com.smartsafe.smartsafe_app.domain.entity.LightStatus
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import java.text.DecimalFormat
 
 @AndroidEntryPoint
 class BoxDetailFragment : Fragment() {
@@ -82,6 +84,7 @@ class BoxDetailFragment : Fragment() {
         binding.loading.hide()
         box?.let {
             this.box = box
+
             binding.boxDetailDoorStatusText.text = when (box.doorStatus) {
                 DoorStatus.OPEN -> getString(R.string.open_state_box)
                 DoorStatus.CLOSED -> getString(R.string.closed_state_box)
@@ -99,11 +102,13 @@ class BoxDetailFragment : Fragment() {
                     )
                 }
 
+            val decimalFormat = DecimalFormat("#")
+
             binding.boxDetailNearStatusText.text =
                 if ((box.distanceObject ?: 0f) > 0 && (box.distanceObject ?: 0f) < 200f) {
-                    getString(R.string.near_state_box, box.distanceObject)
+                    getString(R.string.near_state_box, decimalFormat.format(box.distanceObject))
                 } else if ((box.distanceObject ?: 0f) > 200f) {
-                    getString(R.string.near_state_box, box.distanceObject)
+                    getString(R.string.near_state_box, decimalFormat.format(box.distanceObject))
                 } else {
                     getString(R.string.near_state_box_clear)
                 }
@@ -115,6 +120,23 @@ class BoxDetailFragment : Fragment() {
                     ContextCompat.getColorStateList(requireContext(), R.color.green)
                 } else {
                     ContextCompat.getColorStateList(requireContext(), R.color.green)
+                }
+
+            binding.boxDetailLightStatusText.text = when (box.lightStatus) {
+                LightStatus.ON -> getString(R.string.light_state_box_on)
+                LightStatus.OFF -> getString(R.string.light_state_box_off)
+            }
+
+            binding.boxDetailLightStatusIndicator.backgroundTintList =
+                when (box.lightStatus) {
+                    LightStatus.ON -> ContextCompat.getColorStateList(
+                        requireContext(),
+                        R.color.yellow
+                    )
+                    LightStatus.OFF -> ContextCompat.getColorStateList(
+                        requireContext(),
+                        R.color.black
+                    )
                 }
 
             binding.boxDetailButtonOpenOrClose.text = when (box.doorStatus) {
