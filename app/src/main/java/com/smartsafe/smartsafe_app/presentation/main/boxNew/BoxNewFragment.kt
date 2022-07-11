@@ -130,8 +130,9 @@ class BoxNewFragment : Fragment() {
     }
 
     private fun setUpView() {
-        binding.boxButtonSave.isEnabled = false
+        binding.toolbar.setNavigationOnClickListener { findNavController().popBackStack() }
 
+        binding.boxButtonSave.isEnabled = false
         binding.boxIdText.editText?.doOnTextChanged { inputText, _, _, _ ->
             binding.boxButtonSave.isEnabled =
                 (binding.boxNameText.editText?.text?.length ?: 0) > 0

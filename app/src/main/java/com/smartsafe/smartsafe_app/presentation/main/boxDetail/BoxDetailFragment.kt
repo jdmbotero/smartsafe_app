@@ -8,6 +8,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.smartsafe.smartsafe_app.R
 import com.smartsafe.smartsafe_app.databinding.FragmentBoxDetailBinding
@@ -48,6 +49,7 @@ class BoxDetailFragment : Fragment() {
     }
 
     private fun setUpView() {
+        binding.toolbar.setNavigationOnClickListener { findNavController().popBackStack() }
         binding.boxDetailButtonOpenOrClose.setOnClickListener { openOrCloseBox() }
     }
 

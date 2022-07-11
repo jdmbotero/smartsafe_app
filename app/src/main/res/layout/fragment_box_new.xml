@@ -32,6 +32,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
         android:gravity="center"
+        android:paddingHorizontal="20dp"
         android:text="@string/note_scan_qr"
         android:textSize="16sp"
         android:textStyle="bold"

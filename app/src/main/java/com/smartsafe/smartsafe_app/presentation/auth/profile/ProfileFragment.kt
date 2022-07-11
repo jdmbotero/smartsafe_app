@@ -9,6 +9,7 @@ import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.smartsafe.smartsafe_app.databinding.FragmentProfileBinding
 import com.smartsafe.smartsafe_app.domain.entity.User
 import com.smartsafe.smartsafe_app.presentation.auth.AuthActivity
@@ -37,7 +38,10 @@ class ProfileFragment : Fragment() {
     }
 
     private fun setUpView() {
-        binding.profileButtonSave.isEnabled = false
+        binding.toolbar.setNavigationOnClickListener { findNavController().popBackStack() }
+
+        binding.profileButtonSave.isEnabled =
+            (binding.profileNameText.editText?.text?.length ?: 0) > 0
         binding.profileNameText.editText?.doOnTextChanged { inputText, _, _, _ ->
             binding.profileButtonSave.isEnabled = (inputText?.length ?: 0) > 0
         }

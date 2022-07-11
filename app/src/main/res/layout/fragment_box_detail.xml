@@ -20,6 +20,7 @@
             android:layout_height="wrap_content"
             android:background="@color/bg_app"
             android:minHeight="?attr/actionBarSize"
+            app:navigationIcon="@mipmap/ic_back"
             app:title="@string/app_name"
             app:titleTextColor="@color/white" />
 
