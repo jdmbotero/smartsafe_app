@@ -4,11 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.smartsafe.smartsafe_app.data.repository.box.AddOrUpdateBoxState
 import com.smartsafe.smartsafe_app.data.repository.box.FetchBoxState
+import com.smartsafe.smartsafe_app.data.repository.history.FetchHistoryState
 import com.smartsafe.smartsafe_app.domain.entity.Box
 import com.smartsafe.smartsafe_app.domain.entity.DoorAction
-import com.smartsafe.smartsafe_app.domain.entity.DoorStatus
 import com.smartsafe.smartsafe_app.domain.interactor.box.AddOrUpdateBoxUseCase
 import com.smartsafe.smartsafe_app.domain.interactor.box.FetchBoxUseCase
+import com.smartsafe.smartsafe_app.domain.interactor.history.FetchHistoryUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,14 +22,19 @@ import javax.inject.Inject
 @HiltViewModel
 class BoxDetailViewModel @Inject constructor(
     private val fetchBoxUseCase: FetchBoxUseCase,
-    private val addOrUpdateBoxUseCase: AddOrUpdateBoxUseCase
+    private val addOrUpdateBoxUseCase: AddOrUpdateBoxUseCase,
+    private val fetchHistoryUseCase: FetchHistoryUseCase
 ) : ViewModel() {
 
     val userIntent = Channel<BoxDetailIntent>(Channel.UNLIMITED)
+    val userIntentHistory = Channel<BoxDetailHistoryIntent>(Channel.UNLIMITED)
     private val _state = MutableStateFlow<BoxDetailState>(BoxDetailState.Idle)
+    private val _stateHistory = MutableStateFlow<BoxDetailHistoryState>(BoxDetailHistoryState.Idle)
 
     val state: StateFlow<BoxDetailState>
         get() = _state
+    val stateHistory: StateFlow<BoxDetailHistoryState>
+        get() = _stateHistory
 
     init {
         handleIntent()
@@ -40,6 +46,13 @@ class BoxDetailViewModel @Inject constructor(
                 when (it) {
                     is BoxDetailIntent.FetchBox -> fetchBox(it.box)
                     is BoxDetailIntent.OpenOrCloseBox -> openOrCloseBox(it.box, it.action)
+                }
+            }
+        }
+        viewModelScope.launch {
+            userIntentHistory.consumeAsFlow().collectLatest {
+                when (it) {
+                    is BoxDetailHistoryIntent.FetchHistory -> fetchHistory(it.boxId)
                 }
             }
         }
@@ -67,6 +80,19 @@ class BoxDetailViewModel @Inject constructor(
                 _state.value = when (state) {
                     is AddOrUpdateBoxState.Success -> BoxDetailState.SuccessOpenOrClose(state.box)
                     is AddOrUpdateBoxState.Failure -> BoxDetailState.Error(state.message)
+                }
+            }
+        }
+    }
+
+    private suspend fun fetchHistory(boxId: String?) {
+        boxId?.let {
+            _stateHistory.value = BoxDetailHistoryState.Loading
+            fetchHistoryUseCase.launch(it)
+            fetchHistoryUseCase.resultFlow.collect { state ->
+                _stateHistory.value = when (state) {
+                    is FetchHistoryState.Success -> BoxDetailHistoryState.SuccessFetchHistory(state.history)
+                    is FetchHistoryState.Failure -> BoxDetailHistoryState.Error(state.message)
                 }
             }
         }

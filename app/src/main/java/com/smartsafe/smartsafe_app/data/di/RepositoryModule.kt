@@ -4,6 +4,8 @@ import com.smartsafe.smartsafe_app.data.repository.authWithPhone.AuthWithPhoneRe
 import com.smartsafe.smartsafe_app.data.repository.authWithPhone.AuthWithPhoneRepositoryImpl
 import com.smartsafe.smartsafe_app.data.repository.box.BoxRepository
 import com.smartsafe.smartsafe_app.data.repository.box.BoxRepositoryImpl
+import com.smartsafe.smartsafe_app.data.repository.history.HistoryRepository
+import com.smartsafe.smartsafe_app.data.repository.history.HistoryRepositoryImpl
 import com.smartsafe.smartsafe_app.data.repository.user.UserRepository
 import com.smartsafe.smartsafe_app.data.repository.user.UserRepositoryImpl
 import dagger.Binds
@@ -29,4 +31,9 @@ abstract class RepositoryModule {
     abstract fun bindBoxRepository(
         boxRepositoryImpl: BoxRepositoryImpl
     ): BoxRepository
+
+    @Binds
+    abstract fun bindHistoryRepository(
+        historyRepositoryImpl: HistoryRepositoryImpl
+    ): HistoryRepository
 }

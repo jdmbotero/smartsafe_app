@@ -8,12 +8,10 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.smartsafe.smartsafe_app.R
 import com.smartsafe.smartsafe_app.databinding.FragmentBoxDetailBinding
-import com.smartsafe.smartsafe_app.domain.entity.Box
-import com.smartsafe.smartsafe_app.domain.entity.DoorAction
-import com.smartsafe.smartsafe_app.domain.entity.DoorStatus
-import com.smartsafe.smartsafe_app.domain.entity.LightStatus
+import com.smartsafe.smartsafe_app.domain.entity.*
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -46,6 +44,7 @@ class BoxDetailFragment : Fragment() {
         observeViewModel()
         setUpView()
         fetchBox()
+        fetchHistory()
     }
 
     private fun setUpView() {
@@ -64,6 +63,17 @@ class BoxDetailFragment : Fragment() {
                 }
             }
         }
+
+        lifecycleScope.launch {
+            boxDetailViewModel.stateHistory.collectLatest { state ->
+                when (state) {
+                    is BoxDetailHistoryState.Loading -> showLoading()
+                    is BoxDetailHistoryState.SuccessFetchHistory -> refreshHistory(state.history)
+                    is BoxDetailHistoryState.Error -> showError(state.message)
+                    is BoxDetailHistoryState.Idle -> {}
+                }
+            }
+        }
     }
 
     private fun showLoading() {
@@ -77,6 +87,12 @@ class BoxDetailFragment : Fragment() {
     private fun fetchBox() {
         lifecycleScope.launch {
             boxDetailViewModel.userIntent.send(BoxDetailIntent.FetchBox(box))
+        }
+    }
+
+    private fun fetchHistory() {
+        lifecycleScope.launch {
+            boxDetailViewModel.userIntentHistory.send(BoxDetailHistoryIntent.FetchHistory(box.id))
         }
     }
 
@@ -142,6 +158,17 @@ class BoxDetailFragment : Fragment() {
             binding.boxDetailButtonOpenOrClose.text = when (box.doorStatus) {
                 DoorStatus.OPEN -> getString(R.string.close_box)
                 DoorStatus.CLOSED -> getString(R.string.open_box)
+            }
+        }
+    }
+
+    private fun refreshHistory(history: List<History>?) {
+        binding.loading.hide()
+        if (history?.isNotEmpty() == true) {
+            binding.historyList.visibility = View.VISIBLE
+            binding.historyList.apply {
+                layoutManager = LinearLayoutManager(context)
+                adapter = HistoryListAdapter(history)
             }
         }
     }

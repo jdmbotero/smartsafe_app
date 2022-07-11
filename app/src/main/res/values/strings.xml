@@ -23,6 +23,7 @@
     <string name="light_state_box_off">La luz de la caja está apagada</string>
     <string name="unlock_fingerprint">Activar funciones de la caja con huella</string>
     <string name="label_dont_registered_boxes">AÚN NO TIENES\nCAJAS REGISTRADAS</string>
+    <string name="history">Historial</string>
 
     <string name="biometric_title">Autenticación Biometrica</string>
     <string name="biometric_subtitle">Por favor verifica tu identidad primero</string>
