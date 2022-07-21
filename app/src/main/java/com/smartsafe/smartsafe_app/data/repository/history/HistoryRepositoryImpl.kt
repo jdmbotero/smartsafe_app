@@ -2,6 +2,7 @@ package com.smartsafe.smartsafe_app.data.repository.history
 
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.smartsafe.smartsafe_app.domain.entity.History
@@ -25,6 +26,7 @@ class HistoryRepositoryImpl @Inject constructor() : HistoryRepository {
         val collectionRef = firestoreDb.collection(Constants.FIRESTORE_HISTORY_COLLECTION)
         val registration = collectionRef
             .whereEqualTo("boxId", boxId)
+            .orderBy("date", Query.Direction.DESCENDING)
             .addSnapshotListener { snapshot, e ->
                 if (e != null) {
                     Log.w(LOG_TAG, "Listen failed.", e)

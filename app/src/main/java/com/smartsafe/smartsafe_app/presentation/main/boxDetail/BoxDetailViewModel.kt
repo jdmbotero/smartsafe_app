@@ -27,12 +27,16 @@ class BoxDetailViewModel @Inject constructor(
 ) : ViewModel() {
 
     val userIntent = Channel<BoxDetailIntent>(Channel.UNLIMITED)
+    val userIntentFetch = Channel<BoxDetailFetchIntent>(Channel.UNLIMITED)
     val userIntentHistory = Channel<BoxDetailHistoryIntent>(Channel.UNLIMITED)
     private val _state = MutableStateFlow<BoxDetailState>(BoxDetailState.Idle)
+    private val _stateFetch = MutableStateFlow<BoxDetailFetchState>(BoxDetailFetchState.Idle)
     private val _stateHistory = MutableStateFlow<BoxDetailHistoryState>(BoxDetailHistoryState.Idle)
 
     val state: StateFlow<BoxDetailState>
         get() = _state
+    val stateFetch: StateFlow<BoxDetailFetchState>
+        get() = _stateFetch
     val stateHistory: StateFlow<BoxDetailHistoryState>
         get() = _stateHistory
 
@@ -42,9 +46,15 @@ class BoxDetailViewModel @Inject constructor(
 
     private fun handleIntent() {
         viewModelScope.launch {
+            userIntentFetch.consumeAsFlow().collectLatest {
+                when (it) {
+                    is BoxDetailFetchIntent.FetchBox -> fetchBox(it.box)
+                }
+            }
+        }
+        viewModelScope.launch {
             userIntent.consumeAsFlow().collectLatest {
                 when (it) {
-                    is BoxDetailIntent.FetchBox -> fetchBox(it.box)
                     is BoxDetailIntent.OpenOrCloseBox -> openOrCloseBox(it.box, it.action)
                 }
             }
@@ -60,12 +70,11 @@ class BoxDetailViewModel @Inject constructor(
 
     private suspend fun fetchBox(box: Box) {
         box.id?.let {
-            _state.value = BoxDetailState.Loading
             fetchBoxUseCase.launch(it)
             fetchBoxUseCase.resultFlow.collect { state ->
-                _state.value = when (state) {
-                    is FetchBoxState.Success -> BoxDetailState.SuccessFetch(state.box)
-                    is FetchBoxState.Failure -> BoxDetailState.Error(state.message)
+                _stateFetch.value = when (state) {
+                    is FetchBoxState.Success -> BoxDetailFetchState.SuccessFetch(state.box)
+                    is FetchBoxState.Failure -> BoxDetailFetchState.Error(state.message)
                 }
             }
         }
@@ -87,7 +96,6 @@ class BoxDetailViewModel @Inject constructor(
 
     private suspend fun fetchHistory(boxId: String?) {
         boxId?.let {
-            _stateHistory.value = BoxDetailHistoryState.Loading
             fetchHistoryUseCase.launch(it)
             fetchHistoryUseCase.resultFlow.collect { state ->
                 _stateHistory.value = when (state) {

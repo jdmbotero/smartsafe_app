@@ -58,10 +58,20 @@ class BoxDetailFragment : Fragment() {
             boxDetailViewModel.state.collectLatest { state ->
                 when (state) {
                     is BoxDetailState.Loading -> showLoading()
-                    is BoxDetailState.SuccessFetch -> refreshBoxInfo(state.box)
                     is BoxDetailState.SuccessOpenOrClose -> refreshBoxInfo(state.box)
                     is BoxDetailState.Error -> showError(state.message)
                     is BoxDetailState.Idle -> {}
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            boxDetailViewModel.stateFetch.collectLatest { state ->
+                when (state) {
+                    is BoxDetailFetchState.Loading -> showLoading()
+                    is BoxDetailFetchState.SuccessFetch -> refreshBoxInfo(state.box)
+                    is BoxDetailFetchState.Error -> showError(state.message)
+                    is BoxDetailFetchState.Idle -> {}
                 }
             }
         }
@@ -79,7 +89,7 @@ class BoxDetailFragment : Fragment() {
     }
 
     private fun showLoading() {
-        // binding.loading.show()
+        binding.loading.show()
     }
 
     private fun showError(message: String?) {
@@ -88,7 +98,7 @@ class BoxDetailFragment : Fragment() {
 
     private fun fetchBox() {
         lifecycleScope.launch {
-            boxDetailViewModel.userIntent.send(BoxDetailIntent.FetchBox(box))
+            boxDetailViewModel.userIntentFetch.send(BoxDetailFetchIntent.FetchBox(box))
         }
     }
 
@@ -99,7 +109,7 @@ class BoxDetailFragment : Fragment() {
     }
 
     private fun refreshBoxInfo(box: Box?) {
-        binding.loading.hide()
+        if (box?.doorStatus != this.box.doorStatus) binding.loading.hide()
         box?.let {
             this.box = box
 
@@ -165,7 +175,6 @@ class BoxDetailFragment : Fragment() {
     }
 
     private fun refreshHistory(history: List<History>?) {
-        binding.loading.hide()
         if (history?.isNotEmpty() == true) {
             binding.historyList.visibility = View.VISIBLE
             binding.historyList.apply {

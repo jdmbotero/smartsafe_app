@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.smartsafe.smartsafe_app.R
 import com.smartsafe.smartsafe_app.databinding.ItemHistoryBinding
 import com.smartsafe.smartsafe_app.domain.entity.DoorAction
 import com.smartsafe.smartsafe_app.domain.entity.History
@@ -28,13 +29,13 @@ class HistoryListAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = values[position]
         holder.textAction.text = when (item.doorAction ?: DoorAction.CLOSE) {
-            DoorAction.OPEN -> "Abierta"
-            DoorAction.CLOSE -> "Cerrada"
+            DoorAction.OPEN -> holder.itemView.context.getString(R.string.open)
+            DoorAction.CLOSE -> holder.itemView.context.getString(R.string.close)
         }
 
         item.date?.let { date ->
             holder.textDate.text =
-                SimpleDateFormat("EEEE dd - MMMM - yyyy - hh:mm a").format(date)
+                SimpleDateFormat("EEEE dd - MMMM - yyyy - hh:mm a", Locale.getDefault()).format(date)
                     .split(" ").joinToString(" ") { text ->
                         text.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
                     }
