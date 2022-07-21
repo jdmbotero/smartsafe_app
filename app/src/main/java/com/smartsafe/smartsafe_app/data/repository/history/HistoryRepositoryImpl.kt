@@ -26,7 +26,6 @@ class HistoryRepositoryImpl @Inject constructor() : HistoryRepository {
         val collectionRef = firestoreDb.collection(Constants.FIRESTORE_HISTORY_COLLECTION)
         val registration = collectionRef
             .whereEqualTo("boxId", boxId)
-            .orderBy("date", Query.Direction.DESCENDING)
             .addSnapshotListener { snapshot, e ->
                 if (e != null) {
                     Log.w(LOG_TAG, "Listen failed.", e)
