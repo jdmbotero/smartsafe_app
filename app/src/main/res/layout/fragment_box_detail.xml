@@ -103,6 +103,7 @@
         style="@style/GeneralButton"
         android:layout_marginHorizontal="30dp"
         android:layout_marginTop="40dp"
+        android:stateListAnimator="@null"
         android:text="@string/open_box"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
